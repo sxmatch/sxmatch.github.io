@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is a fully responsive theme for Jekyll + Jekyll-Bootstrap. It is built on top of [Twitter Bootstrap](http://twitter.github.com/bootstrap/).
 
 ![Screenshot](https://raw.github.com/dhulihan/hooligan/master/screenshot.png)
@@ -66,3 +67,4 @@ The documentation website at <http://jekyllbootstrap.com> is maintained at https
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
+>>>>>>> jekyll-bootstrap/master
