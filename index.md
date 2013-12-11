@@ -16,7 +16,7 @@ tagline: Supporting tagline
 ## Ready
 我已经完成的blogs 
 
-{% highlight java %}
+{% highlight bash linenos %}
 
     $ find . -name "*.tmp" | xargs rm -rf
 
