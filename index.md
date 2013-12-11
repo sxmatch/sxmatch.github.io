@@ -10,21 +10,17 @@ tagline: regexisart
 
 <ul class="posts">
   {% for post in site.posts %}
-    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
+    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li><p>
   {% endfor %}
 </ul>
 
 ## 最近在做的事
 
-> **GAE**
-
-> **Github**
-
-> **blog**
-
-> **rpm**
-
-> **Jekyll**
+    **GAE**
+    **Github**
+    **blog**
+    **rpm**
+    **Jekyll**
 
 ## Tips
 
