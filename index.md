@@ -5,32 +5,29 @@ tagline: Supporting tagline
 ---
 {% include JB/setup %}
 
-Read [Jekyll Quick Start](http://jekyllbootstrap.com/usage/jekyll-quick-start.html)
+## 最近在做的事
 
-Complete usage and documentation available at: [Jekyll Bootstrap](http://jekyllbootstrap.com)
+    GAE
+    Github blog
+    rpm
+    Jekyll
 
-## Update Author Attributes
-
-In `_config.yml` remember to specify your own data:
     
-    title : My Blog =)
-    
-    author :
-      name : Name Lastname
-      email : blah@email.test
-      github : username
-      twitter : username
+## Ready
+我已经完成的blogs 
 
-The theme should reference these variables whenever needed.
-    
-## Sample Posts
+{% highlight bash linenos %}
 
-This blog contains sample posts which help stage pages and blog data.
-When you don't need the samples anymore just delete the `_posts/core-samples` folder.
+    $ find . -name "*.tmp" | xargs rm -rf
 
-    $ rm -rf _posts/core-samples
+{% endhighlight %}
 
-Here's a sample "posts list".
+```shell
+def yourfunction():
+     print "Hello World!"
+```
+
+My blog list.
 
 <ul class="posts">
   {% for post in site.posts %}
@@ -39,8 +36,17 @@ Here's a sample "posts list".
 </ul>
 
 ## To-Do
+My doing list.
 
-This theme is still unfinished. If you'd like to be added as a contributor, [please fork](http://github.com/plusjade/jekyll-bootstrap)!
-We need to clean up the themes, make theme usage guides with theme-specific markup examples.
+<ul class="posts">
+  {% for draft in site.drafts %}
+    <li> &raquo; <span>{{ draft.title }}</span></li>
+  {% endfor %}
+</ul>
 
+## From
+
+Read [Jekyll Quick Start](http://jekyllbootstrap.com/usage/jekyll-quick-start.html)
+
+Complete usage and documentation available at: [Jekyll Bootstrap](http://jekyllbootstrap.com)
 
