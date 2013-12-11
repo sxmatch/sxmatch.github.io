@@ -82,7 +82,7 @@ JB :
   comments :
     provider : disqus
     disqus :
-      short_name : 0kiwik0 
+      short_name : kiwik
     livefyre :
       site_id : 123
     intensedebate :
