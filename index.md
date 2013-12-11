@@ -22,7 +22,7 @@ tagline: Supporting tagline
 
 {% endhighlight %}
 
-```shell
+```python linenos
 def yourfunction():
      print "Hello World!"
 ```
