@@ -15,6 +15,9 @@ tagline: regexisart
 </ul>
 
 ## 最近在做的事
+<code bash linenos>
+$ find . -name "*.tmp" | xargs rm -rf
+</code>
 
     **GAE**
     **Github**
