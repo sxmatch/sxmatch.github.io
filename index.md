@@ -16,16 +16,11 @@ tagline: Supporting tagline
 ## Ready
 我已经完成的blogs 
 
-{% highlight bash linenos %}
+{% highlight sh linenos %}
 
     $ find . -name "*.tmp" | xargs rm -rf
 
 {% endhighlight %}
-
-```python linenos
-def yourfunction():
-     print "Hello World!"
-```
 
 My blog list.
 
