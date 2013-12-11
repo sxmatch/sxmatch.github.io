@@ -16,7 +16,16 @@ tagline: Supporting tagline
 ## Ready
 我已经完成的blogs 
 
+{% highlight shell %}
+
     $ find . -name "*.tmp" | xargs rm -rf
+
+{% endhighlight %}
+
+```shell
+def yourfunction():
+     print "Hello World!"
+```
 
 My blog list.
 
@@ -27,6 +36,7 @@ My blog list.
 </ul>
 
 ## To-Do
+My doing list.
 
 <ul class="posts">
   {% for draft in site.drafts %}
