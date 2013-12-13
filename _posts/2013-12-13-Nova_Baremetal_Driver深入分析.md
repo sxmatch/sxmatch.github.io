@@ -15,14 +15,17 @@ tags : [openstack, nova, baremetal, Iroic, deployment]
 ## 简介
 Nova BareMetal，我的理解就是通过OpenStack API像管理虚拟机一样管理物理服务器（包括未装OS和安装OS的物理服务器），可以理解为如下对应方式：
 
+|                   |                      |
 |VM        | Baremetal|
-|:--------: | :------:|
+|:--------| :------|
 |创建虚拟机 | PXE启动，加载操作系统|
 |启动虚拟机 | 上电|
 |停止虚拟机 | 下电|
 |重启虚拟机 | 重启服务器|
+|                       |                           |
 
 当前的形式是一个Nova Driver和KVM、XEN、Vmware在Nova中同属一层的代码结构。当前Baremetal Driver分为两部分：NodeDriver和PowerManager，NodeDriver的实现有PXE、Tilera；PowerManager的实现有IPMI、Tilera_PDU、Iboot、VirtualPower。这篇文档就介绍大家最熟悉的PXE+IPMI。
+
 
 Nova BareMetal Driver从OpenStack Grizzly版本加入，当前已经从Nova中分离出来，成为一个孵化项目Ironic，社区计划Ironic成熟之后，BareMetal就从中Nova中废弃。在Havana版本中的Nova v3 API已经不支持baremetal的扩展，baremetal的扩展API仅在v2 API中出现。
 
@@ -133,24 +136,24 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
     {% endhighlight %}
     
-    将这些镜像文件上传至`glance`
+    将这些镜像文件上传至glance
     
-    {% highlight bash linenos %}
+        {% highlight bash linenos %}
+        
+        glance image-create --name my-vmlinuz --public --disk-format aki  < my-vmlinuz
+        
+        glance image-create --name my-initrd --public --disk-format ari  <my-initrd
+        
+        glance image-create --name my-image --public --disk-format qcow2 --container-format bare \
+            --property kernel_id=$MY_VMLINUZ_UUID --property ramdisk_id=$MY_INITRD_UUID <my-image
+        
+        glance image-create --name deploy-vmlinuz --public --disk-format aki <vmlinuz-$KERNEL
+        
+        glance image-create --name deploy-initrd --public --disk-format ari <my-deploy-ramdisk.initramfs
+        
+        {% endhighlight %}
     
-    glance image-create --name my-vmlinuz --public --disk-format aki  < my-vmlinuz
-    
-    glance image-create --name my-initrd --public --disk-format ari  <my-initrd
-    
-    glance image-create --name my-image --public --disk-format qcow2 --container-format bare \
-        --property kernel_id=$MY_VMLINUZ_UUID --property ramdisk_id=$MY_INITRD_UUID <my-image
-    
-    glance image-create --name deploy-vmlinuz --public --disk-format aki <vmlinuz-$KERNEL
-    
-    glance image-create --name deploy-initrd --public --disk-format ari <my-deploy-ramdisk.initramfs
-    
-    {% endhighlight %}
-    
-8. 在nova中创建baremetal专用的flavor，其中cpu_arch、deploy_kernel_id和deploy_ramdisk_id要和compute host的`nova.conf`中的deploy_kernel、deploy_ramdisk和instance_type_extra_specs配置一致
+8. 在nova中创建baremetal专用的flavor，其中cpu_arch、deploy_kernel_id和deploy_ramdisk_id要和compute host的nova.conf中的deploy_kernel、deploy_ramdisk和instance_type_extra_specs配置一致
     
     {% highlight ini linenos %}
     
@@ -161,17 +164,17 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     deploy_ramdisk =$DEPLOY_INITRD_UUID
     
     {% endhighlight %}
-    
-    {% highlight bash linenos %}
-    
-    nova flavor-create my-baremetal-flavor $RAM $DISK $CPU
-    # cpu_arch must match nova.conf, and of course, also must match your hardware
-    nova flavor-key my-baremetal-flavor set \
-         cpu_arch={i386|x86_64} \
-         "baremetal:deploy_kernel_id"=$DEPLOY_VMLINUZ_UUID \
-         "baremetal:deploy_ramdisk_id"=$DEPLOY_INITRD_UUID
-    
-    {% endhighlight %}
+        
+        {% highlight bash linenos %}
+        
+        nova flavor-create my-baremetal-flavor $RAM $DISK $CPU
+        # cpu_arch must match nova.conf, and of course, also must match your hardware
+        nova flavor-key my-baremetal-flavor set \
+             cpu_arch={i386|x86_64} \
+             "baremetal:deploy_kernel_id"=$DEPLOY_VMLINUZ_UUID \
+             "baremetal:deploy_ramdisk_id"=$DEPLOY_INITRD_UUID
+        
+        {% endhighlight %}
     
 9. 将物理服务器信息注册到环境中，hostname、mac、cpu、ram、disk信息和IPMI的IP、user、password，然后将服务器的所有网络接口也注册进环境
     
