@@ -15,12 +15,12 @@ tags : [openstack, nova, baremetal, Iroic, deployment]
 ## 简介
 Nova BareMetal，我的理解就是通过OpenStack API像管理虚拟机一样管理物理服务器（包括未装OS和安装OS的物理服务器），可以理解为如下对应方式：
 
-VM        |  Baremetal
-:-------- | :------
-创建虚拟机 | PXE启动，加载操作系统
-启动虚拟机 | 上电
-停止虚拟机 | 下电
-重启虚拟机 | 重启服务器
+|VM        | Baremetal|
+|:-------- | :------|
+|创建虚拟机 | PXE启动，加载操作系统|
+|启动虚拟机 | 上电|
+|停止虚拟机 | 下电|
+|重启虚拟机 | 重启服务器|
 
 当前的形式是一个Nova Driver和KVM、XEN、Vmware在Nova中同属一层的代码结构。当前Baremetal Driver分为两部分：NodeDriver和PowerManager，NodeDriver的实现有PXE、Tilera；PowerManager的实现有IPMI、Tilera_PDU、Iboot、VirtualPower。这篇文档就介绍大家最熟悉的PXE+IPMI。
 
@@ -213,7 +213,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     - activate_node 等待PXE部署完成
     
     - 如果失败清除以上动作。
-
+    
 
 4. 细心的听众可能发现了，哪怎么知道PXE已经部署结束了呢？这里就要用到nova-baremetal-deploy-helper进程了。nova-baremetal-deploy-helper服务启动之后，会在nova-compute host的10000端口启动一个http监听。当给10000端口发送一个POST请求时，nova-baremetal-deploy-helper会根据消息体中的iscsi iqn，将创建虚拟机时的用户指定的image dd到这个iscsi target中，然后创建swap分区等等，最后将PXE的启动方式从deploy改为boot，最后将数据库中baremetal node的状态改为DEPLOYDONE，nova-compute进程通过查数据库就能知道PXE加载完成了。
 
