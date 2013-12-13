@@ -16,24 +16,17 @@ tagline: regexisart
 
 ## 最近在做的事
 ```
-**GAE**
-**Github**
-**blog**
-**rpm**
-**Jekyll**
+GAE
+Github
+blog
+keystone
+Jekyll
 ```
-
-## Gist
-
-{% gist 7943006 %}
-
 ## Tips
 
-{% highlight ksh linenos %}
-
-    $ find . -name "*.tmp" | xargs rm -rf
-
-{% endhighlight %}
+```ksh linenos
+$ find . -name "*.tmp" | xargs rm -rf
+```endhighlight
 
 ## To-Do
 My doing list.
