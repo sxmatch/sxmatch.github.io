@@ -24,11 +24,11 @@ tagline: regexisart
 
 ## Tips
 
-```bash
+``` bash
    find . -name "*.tmp" | xargs rm -rf
 ```
 
-```python
+``` python linenos
     print 'ruichen %s' % ruichen
 ```
 
