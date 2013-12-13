@@ -24,14 +24,6 @@ tagline: regexisart
 
 ## Tips
 
-``` bash
-   find . -name "*.tmp" | xargs rm -rf
-```
-
-``` python linenos
-    print 'ruichen %s' % ruichen
-```
-
 {% highlight python linenos %}
 def main:
     pass
