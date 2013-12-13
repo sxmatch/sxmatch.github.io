@@ -168,7 +168,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     deploy_ramdisk = $DEPLOY_INITRD_UUID
     
     {% endhighlight %}
-        
+10. 创建nova的flavor
     {% highlight bash linenos %}
     
     nova flavor-create my-baremetal-flavor $RAM $DISK $CPU
@@ -217,9 +217,8 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
     - activate_node 等待PXE部署完成
     
-    - 如果失败清除以上动作
+    - if失败清除以上动作
     
-
 4. 细心的听众可能发现了，哪怎么知道PXE已经部署结束了呢？这里就要用到nova-baremetal-deploy-helper进程了。nova-baremetal-deploy-helper服务启动之后，会在nova-compute host的10000端口启动一个http监听。当给10000端口发送一个POST请求时，nova-baremetal-deploy-helper会根据消息体中的iscsi iqn，将创建虚拟机时的用户指定的image dd到这个iscsi target中，然后创建swap分区等等，最后将PXE的启动方式从deploy改为boot，最后将数据库中baremetal node的状态改为DEPLOYDONE，nova-compute进程通过查数据库就能知道PXE加载完成了。
 
 5. 到现在为止还有两个问题没有想通：谁向nova-baremetal-deploy-helper的10000端口发消息？为什么要用iscsi？第一个问题真的是找了很久都没有发现，python代码中没有给10000端口发POST消息的位置，后来还是在一个baremetal的rst文档中发现了一点线索。nova-baremetal-deploy-helper works in conjunction with diskimage-builder's "deploy" ramdisk to write an image from glance onto the baremetal node's disks using iSCSI。继续看diskimage-builder。
@@ -307,4 +306,4 @@ http://blog.csdn.net/ruixj/article/details/3772752
 
 *陈锐 ruichen @kiwik*
 
-*2013/12/14 1:04:19 *
+2013/12/14 1:09:26 
