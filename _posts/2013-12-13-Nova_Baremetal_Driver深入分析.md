@@ -72,7 +72,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 
 2. 修改nova的配置文件，wiki原文中说如下的配置都需要加入nova-compute host，但是明显scheduler_host_manager、ram_allocation_ratio和reserved_host_memory_mb应该在scheduler节点配置，其他配置项加入nova-compute host。
     
-    {% highlight cfg linenos %}
+    {% highlight ini linenos %}
     
     [DEFAULT]
     scheduler_host_manager = nova.scheduler.baremetal_host_manager.BaremetalHostManager
@@ -95,7 +95,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 
 4. 为了支持PXE需要配置pxelinux.0引导程序、pxelinux.cfg和tftp的boot根目录。PXE相关内容可以参考[here](http://blog.csdn.net/trochiluses/article/details/11736119)
     
-    {% highlight sh linenos %}
+    {% highlight bash linenos %}
     
     sudo mkdir -p /tftpboot/pxelinux.cfg
     sudo cp /usr/lib/syslinux/pxelinux.0 /tftpboot/
@@ -109,7 +109,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
 5. 当前使用Baremetal，至少需要keystone、nova、neutron、glance、nova-compute、dnsmasq和nova-baremetal-deploy-helper这些服务。
     
-    {% highlight ksh linenos %}
+    {% highlight bash linenos %}
     
     # Start dnsmasq for baremetal deployments. Change IFACE and RANGE as needed.
     # Note that RANGE must not overlap with the instance IPs assigned by Nova or Neutron.
@@ -159,7 +159,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
 9. 在nova中创建baremetal专用的flavor，其中cpu_arch、deploy_kernel_id和deploy_ramdisk_id要和compute host的nova.conf中的deploy_kernel、deploy_ramdisk和instance_type_extra_specs配置一致
     
-    {% highlight ini %}
+    {% highlight ini linenos %}
     
     instance_type_extra_specs = cpu_arch:{i386|x86_64}
     
@@ -168,8 +168,10 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     deploy_ramdisk = $DEPLOY_INITRD_UUID
     
     {% endhighlight %}
+    
 10. 创建nova的flavor
-    {% highlight bash %}
+    
+    {% highlight bash linenos %}
     
     nova flavor-create my-baremetal-flavor $RAM $DISK $CPU
     # cpu_arch must match nova.conf, and of course, also must match your hardware
