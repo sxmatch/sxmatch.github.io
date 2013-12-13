@@ -167,9 +167,9 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     nova flavor-create my-baremetal-flavor $RAM $DISK $CPU
     # cpu_arch must match nova.conf, and of course, also must match your hardware
     nova flavor-key my-baremetal-flavor set \
-     cpu_arch={i386|x86_64} \
-     "baremetal:deploy_kernel_id"=$DEPLOY_VMLINUZ_UUID \
-      "baremetal:deploy_ramdisk_id"=$DEPLOY_INITRD_UUID
+         cpu_arch={i386|x86_64} \
+         "baremetal:deploy_kernel_id"=$DEPLOY_VMLINUZ_UUID \
+         "baremetal:deploy_ramdisk_id"=$DEPLOY_INITRD_UUID
     
     {% endhighlight %}
     
