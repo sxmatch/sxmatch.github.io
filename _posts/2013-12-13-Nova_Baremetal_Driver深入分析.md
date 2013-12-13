@@ -87,94 +87,94 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 3. 在nova-compute host安装IPMI和PXE需要的软件dnsmasq ipmitool open-iscsi syslinux。
 
 4. 为了支持PXE需要配置pxelinux.0引导程序、pxelinux.cfg和tftp的boot根目录。PXE相关内容可以参考[here](http://blog.csdn.net/trochiluses/article/details/11736119)
-
+    
     {% highlight bash linenos %}
-   
+    
     sudo mkdir -p /tftpboot/pxelinux.cfg
     sudo cp /usr/lib/syslinux/pxelinux.0 /tftpboot/
     sudo chown -R $NOVA_USER /tftpboot
-   
+    
     sudo mkdir -p $NOVA_DIR/baremetal/dnsmasq
     sudo mkdir -p $NOVA_DIR/baremetal/console
     sudo chown -R $NOVA_USER $NOVA_DIR/baremetal
-   
+    
     {% endhighlight %}
     
 5. 当前使用Baremetal，至少需要keystone、nova、neutron、glance、nova-compute、dnsmasq和nova-baremetal-deploy-helper这些服务。
-
+    
     {% highlight bash linenos %}
-   
+    
     # Start dnsmasq for baremetal deployments. Change IFACE and RANGE as needed.
     # Note that RANGE must not overlap with the instance IPs assigned by Nova or Neutron.
     sudo dnsmasq --conf-file= --port=0 --enable-tftp --tftp-root=/tftpboot \
       --dhcp-boot=pxelinux.0 --bind-interfaces --pid-file=/var/run/dnsmasq.pid \
       --interface=$IFACE --dhcp-range=$RANGE
-   
+    
     {% endhighlight %}
-
+    
     上面dnsmasq的启动参数中包括了pxe启动的引导程序pxelinux.0和部署镜像的tftp根目录位置/tftpboot。这里为了避免neutron-dhcp相应PXE启动的dhcp请求，neutron-dhcp需要停止。
     
 6. 在msyql中为baremetal创建独立的nova_bm数据库schema，与nova schema分开，nova-baremetal-manage db sync
 
 7. 准备镜像，通过openstack社区提供的diskimage-builder创建镜像
-
+    
     {% highlight bash linenos %}
-   
+    
     git clone https://github.com/openstack/diskimage-builder.git
     cd diskimage-builder
-   
+    
     # build the image your users will run
     bin/disk-image-create -u base -o my-image
     # and extract the kernel & ramdisk
     bin/disk-image-get-kernel -d ./ -o my -i $(pwd)/my-image.qcow2
-   
+    
     # build the deploy image
     bin/ramdisk-image-create deploy -a i386 -o my-deploy-ramdisk
-   
+    
     {% endhighlight %}
-   
+    
     将这些镜像文件上传至`glance`
-   
+    
     {% highlight bash linenos %}
-   
+    
     glance image-create --name my-vmlinuz --public --disk-format aki  < my-vmlinuz
-   
+    
     glance image-create --name my-initrd --public --disk-format ari  <my-initrd
-   
+    
     glance image-create --name my-image --public --disk-format qcow2 --container-format bare \
         --property kernel_id=$MY_VMLINUZ_UUID --property ramdisk_id=$MY_INITRD_UUID <my-image
-   
+    
     glance image-create --name deploy-vmlinuz --public --disk-format aki <vmlinuz-$KERNEL
-   
+    
     glance image-create --name deploy-initrd --public --disk-format ari <my-deploy-ramdisk.initramfs
-   
+    
     {% endhighlight %}
     
 8. 在nova中创建baremetal专用的flavor，其中cpu_arch、deploy_kernel_id和deploy_ramdisk_id要和compute host的`nova.conf`中的deploy_kernel、deploy_ramdisk和instance_type_extra_specs配置一致
-
+    
     {% highlight ini linenos %}
-   
+    
     instance_type_extra_specs = cpu_arch:{i386|x86_64}
-   
+    
     deploy_kernel =$DEPLOY_VMLINUZ_UUID
-   
+    
     deploy_ramdisk =$DEPLOY_INITRD_UUID
-   
+    
     {% endhighlight %}
-   
+    
     {% highlight bash linenos %}
-   
+    
     nova flavor-create my-baremetal-flavor $RAM $DISK $CPU
     # cpu_arch must match nova.conf, and of course, also must match your hardware
     nova flavor-key my-baremetal-flavor set \
      cpu_arch={i386|x86_64} \
      "baremetal:deploy_kernel_id"=$DEPLOY_VMLINUZ_UUID \
       "baremetal:deploy_ramdisk_id"=$DEPLOY_INITRD_UUID
-   
+    
     {% endhighlight %}
     
 9. 将物理服务器信息注册到环境中，hostname、mac、cpu、ram、disk信息和IPMI的IP、user、password，然后将服务器的所有网络接口也注册进环境
-
+    
     {% highlight bash linenos %}
     
     nova baremetal-node-create --pm_address=... --pm_user=... --pm_password=... \
@@ -183,7 +183,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     nova baremetal-interface-add $ID $MAC
     
     {% endhighlight %}
-
+    
 ## Baremetal driver的创建虚拟机流程
 
 ![baremetal workflow](https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-13/baremetal.png)
@@ -193,7 +193,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 2. nova-scheduler配置为BaremetalHostManager，这个类继承自default的HostManager，所以可以同时处理vm和baremetal的scheduler，nova-compute host的nova.conf中配置的\[baremetal\]选项中的instance_type_extra_specs会被刷新到NodeStats中，当创建instance的flavor的extra_specs根据默认配置的ComputeCapabilitiesFilter找到符合配置的nova-compute host将请求发送到这个baremetal nova-compute host。
 
 3. 请求进入nova-compute host因为配置的是BareMetalDriver，进入spawn方法开始创建baremetal instance，根据scheduler选择的instance\['node'\]的uuid查询nova_bm库，将instance_uuid和instance.hostname更新到数据库，然后作如下动作：
-
+    
     - _plug_vifs 将neutron分配的网络uuid和注册的pif关联- 
     
     - _attach_block_devices 将cinder块设备通过iscsi导出到nova-compute host，貌似是通过compute host桥接到baremetal node
@@ -210,76 +210,77 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
     - activate_node 等待PXE部署完成
     
-    - 如果失败清除以上动作。
+    - 如果失败清除以上动作
     
+
 4. 细心的听众可能发现了，哪怎么知道PXE已经部署结束了呢？这里就要用到nova-baremetal-deploy-helper进程了。nova-baremetal-deploy-helper服务启动之后，会在nova-compute host的10000端口启动一个http监听。当给10000端口发送一个POST请求时，nova-baremetal-deploy-helper会根据消息体中的iscsi iqn，将创建虚拟机时的用户指定的image dd到这个iscsi target中，然后创建swap分区等等，最后将PXE的启动方式从deploy改为boot，最后将数据库中baremetal node的状态改为DEPLOYDONE，nova-compute进程通过查数据库就能知道PXE加载完成了。
 
 5. 到现在为止还有两个问题没有想通：谁向nova-baremetal-deploy-helper的10000端口发消息？为什么要用iscsi？第一个问题真的是找了很久都没有发现，python代码中没有给10000端口发POST消息的位置，后来还是在一个baremetal的rst文档中发现了一点线索。nova-baremetal-deploy-helper works in conjunction with diskimage-builder's "deploy" ramdisk to write an image from glance onto the baremetal node's disks using iSCSI。继续看diskimage-builder。
 
 6. diskimage-builder也是OpenStack项目下的一个image制作工具，属于TripleO的一部分。这部分了解的不是很多，一个镜像制作工具，可以制作cloudimage和deployimage，在制作镜像的过程中，可以安装需要的软件和脚本，如果没有猜错的话这些都应该叫elements，文档的开始baremetal的image也是通diskimage-builder制作的，还导出了deploy-ramdisk和deploy-kernel，上面那个向nova-baremetal-deploy-helper发送10000 POST消息的脚本就是在deploy-ramdisk中执行的，千辛万苦的终于在github的`diskimage-builder` `diskimage-builder/elements/deploy/init.d/80-deploy`的仓库里发现了这样一段代码：
-
+    
     {% highlight bash linenos %}
-
+    
      if [ -z "$ISCSI_TARGET_IQN" ]; then
-
+    
      err_msg "iscsi_target_iqn is not defined"
-
+    
      troubleshoot
-
+    
     fi
-
+    
     t=0
-
+    
     while ! target_disk=$(find_disk "$DISK"); do
-
+    
      if [ $t -eq 10 ]; then
-
+    
        break
-
+    
      fi
-
+    
      t=$(($t + 1))
-
+    
      sleep 1
-
+    
     done
-
+    
     if [ -z "$target_disk" ]; then
-
+    
      err_msg "Could not find disk to use."
-
+    
      troubleshoot
-
+    
     fi
-
+    
     echo "start iSCSI target on $target_disk"
-
+    
     start_iscsi_target "$ISCSI_TARGET_IQN" "$target_disk" ALL
-
+    
     if [ $? -ne 0 ]; then
-
+    
      err_msg "Failed to start iscsi target."
-
+    
      troubleshoot
-
+    
     fi
-
+    
     echo "request boot server to deploy image"
-
+    
     d="i=$DEPLOYMENT_ID&k=$DEPLOYMENT_KEY&a=$BOOT_IP_ADDRESS&n=$ISCSI_TARGET_IQN&e=$FIRST_ERR_MSG"
-
+    
     wget --post-data "$d" "http://$BOOT_SERVER:10000"
-
+    
     echo "waiting for notice of complete"
-
+    
     nc -l -p 10000
-
+    
     echo "stop iSCSI target on $target_disk"
-
+    
     stop_iscsi_target
-
+    
     {% endhighlight %}
-
+    
 7. 这段代码其实也间接的回答了我的第二个问题，为什么要用iscsi？baremetal node通过deploy ramdisk将disk通过iscsi暴露给了nova-compute host，然后在nova-baremetal-deploy-helper进程中获取baremetal node的disk的iscsi iqn，然后将用户指定的image dd到这个iscsi target中，完成对于baremetal node的系统盘安装，然后给baremetal node的10000端口发一个done的socket消息，通知baremetal node停止iscsi。
 
 > 以上就是我对于baremetal的一点分析，说实话老外解决问题使用的一些方案，真不是我们轻易可以想得到的。
@@ -299,4 +300,4 @@ http://blog.csdn.net/ruixj/article/details/3772752
 
 *陈锐 ruichen @kiwik*
 
-*2013/12/14 0:23:54*
+*2013/12/14 0:37:23*
