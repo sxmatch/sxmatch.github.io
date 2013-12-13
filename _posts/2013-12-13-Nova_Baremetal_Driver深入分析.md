@@ -16,7 +16,7 @@ tags : [openstack, nova, baremetal, Iroic, deployment]
 Nova BareMetal，我的理解就是通过OpenStack API像管理虚拟机一样管理物理服务器（包括未装OS和安装OS的物理服务器），可以理解为如下对应方式：
 
 |VM        | Baremetal|
-|:-------- | :------|
+|:--------: | :------:|
 |创建虚拟机 | PXE启动，加载操作系统|
 |启动虚拟机 | 上电|
 |停止虚拟机 | 下电|
@@ -64,9 +64,9 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 1. 需要先有一套OpenStack环境，可以是一个All-in-one的虚拟机化部署，需要有nova-compute进程。
 
 2. 修改nova的配置文件，wiki原文中说如下的配置都需要加入nova-compute host，但是明显scheduler_host_manager、ram_allocation_ratio和reserved_host_memory_mb应该在scheduler节点配置，其他配置项加入nova-compute host。
-
+    
     {% highlight ini linenos%}
-   
+    
     [DEFAULT]
     scheduler_host_manager = nova.scheduler.baremetal_host_manager.BaremetalHostManager
     firewall_driver = nova.virt.firewall.NoopFirewallDriver
@@ -81,12 +81,12 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     driver = nova.virt.baremetal.pxe.PXE
     instance_type_extra_specs = cpu_arch:{i386|x86_64}
     sql_connection = mysql://{user}:{pass}@{host}/nova_bm
-   
+    
     {% endhighlight %}
-
+    
 3. 在nova-compute host安装IPMI和PXE需要的软件dnsmasq ipmitool open-iscsi syslinux。
 
-4. 为了支持PXE需要配置pxelinux.0引导程序、pxelinux.cfg和tftp的boot根目录。
+4. 为了支持PXE需要配置pxelinux.0引导程序、pxelinux.cfg和tftp的boot根目录。PXE相关内容可以参考[here](http://blog.csdn.net/trochiluses/article/details/11736119)
 
     {% highlight bash linenos %}
    
@@ -99,9 +99,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     sudo chown -R $NOVA_USER $NOVA_DIR/baremetal
    
     {% endhighlight %}
-
-    PXE相关内容可以参考[here](http://blog.csdn.net/trochiluses/article/details/11736119)
-
+    
 5. 当前使用Baremetal，至少需要keystone、nova、neutron、glance、nova-compute、dnsmasq和nova-baremetal-deploy-helper这些服务。
 
     {% highlight bash linenos %}
@@ -115,7 +113,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     {% endhighlight %}
 
     上面dnsmasq的启动参数中包括了pxe启动的引导程序pxelinux.0和部署镜像的tftp根目录位置/tftpboot。这里为了避免neutron-dhcp相应PXE启动的dhcp请求，neutron-dhcp需要停止。
-
+    
 6. 在msyql中为baremetal创建独立的nova_bm数据库schema，与nova schema分开，nova-baremetal-manage db sync
 
 7. 准备镜像，通过openstack社区提供的diskimage-builder创建镜像
@@ -151,7 +149,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     glance image-create --name deploy-initrd --public --disk-format ari <my-deploy-ramdisk.initramfs
    
     {% endhighlight %}
-
+    
 8. 在nova中创建baremetal专用的flavor，其中cpu_arch、deploy_kernel_id和deploy_ramdisk_id要和compute host的`nova.conf`中的deploy_kernel、deploy_ramdisk和instance_type_extra_specs配置一致
 
     {% highlight ini linenos %}
@@ -174,7 +172,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
       "baremetal:deploy_ramdisk_id"=$DEPLOY_INITRD_UUID
    
     {% endhighlight %}
-
+    
 9. 将物理服务器信息注册到环境中，hostname、mac、cpu、ram、disk信息和IPMI的IP、user、password，然后将服务器的所有网络接口也注册进环境
 
     {% highlight bash linenos %}
@@ -214,7 +212,6 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
     - 如果失败清除以上动作。
     
-
 4. 细心的听众可能发现了，哪怎么知道PXE已经部署结束了呢？这里就要用到nova-baremetal-deploy-helper进程了。nova-baremetal-deploy-helper服务启动之后，会在nova-compute host的10000端口启动一个http监听。当给10000端口发送一个POST请求时，nova-baremetal-deploy-helper会根据消息体中的iscsi iqn，将创建虚拟机时的用户指定的image dd到这个iscsi target中，然后创建swap分区等等，最后将PXE的启动方式从deploy改为boot，最后将数据库中baremetal node的状态改为DEPLOYDONE，nova-compute进程通过查数据库就能知道PXE加载完成了。
 
 5. 到现在为止还有两个问题没有想通：谁向nova-baremetal-deploy-helper的10000端口发消息？为什么要用iscsi？第一个问题真的是找了很久都没有发现，python代码中没有给10000端口发POST消息的位置，后来还是在一个baremetal的rst文档中发现了一点线索。nova-baremetal-deploy-helper works in conjunction with diskimage-builder's "deploy" ramdisk to write an image from glance onto the baremetal node's disks using iSCSI。继续看diskimage-builder。
@@ -285,7 +282,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 
 7. 这段代码其实也间接的回答了我的第二个问题，为什么要用iscsi？baremetal node通过deploy ramdisk将disk通过iscsi暴露给了nova-compute host，然后在nova-baremetal-deploy-helper进程中获取baremetal node的disk的iscsi iqn，然后将用户指定的image dd到这个iscsi target中，完成对于baremetal node的系统盘安装，然后给baremetal node的10000端口发一个done的socket消息，通知baremetal node停止iscsi。
 
-以上就是我对于baremetal的一点分析，说实话老外解决问题使用的一些方案，真不是我们轻易可以想得到的。
+> 以上就是我对于baremetal的一点分析，说实话老外解决问题使用的一些方案，真不是我们轻易可以想得到的。
 
 ## 参考文献
 
@@ -302,5 +299,4 @@ http://blog.csdn.net/ruixj/article/details/3772752
 
 *陈锐 ruichen @kiwik*
 
-*2013-12-13*
-
+*2013/12/14 0:23:54*
