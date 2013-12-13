@@ -163,9 +163,9 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
     instance_type_extra_specs = cpu_arch:{i386|x86_64}
     
-    deploy_kernel =$DEPLOY_VMLINUZ_UUID
+    deploy_kernel = $DEPLOY_VMLINUZ_UUID
     
-    deploy_ramdisk =$DEPLOY_INITRD_UUID
+    deploy_ramdisk = $DEPLOY_INITRD_UUID
     
     {% endhighlight %}
         
@@ -307,4 +307,4 @@ http://blog.csdn.net/ruixj/article/details/3772752
 
 *陈锐 ruichen @kiwik*
 
-*2013/12/14 0:56:47 *
+*2013/12/14 1:04:19 *
