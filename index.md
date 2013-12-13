@@ -24,11 +24,11 @@ tagline: regexisart
 
 ## Tips
 
-```bash linenos
+```
    $ find . -name "*.tmp" | xargs rm -rf
 ```
 
-```python linenos
+```
 def main:
     pass
 ```
