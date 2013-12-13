@@ -29,13 +29,13 @@ tagline: regexisart
 ```
 
 ```python
-print 'ruichen %s' % ruichen
+    print 'ruichen %s' % ruichen
 ```
 
 {% highlight python linenos %}
 def main:
     pass
-<% endhighlight %>
+{% endhighlight %}
 
 ## To-Do
 My doing list.
