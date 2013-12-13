@@ -25,12 +25,17 @@ tagline: regexisart
 ## Tips
 
 ```bash
-   $ find . -name "*.tmp" | xargs rm -rf
+   find . -name "*.tmp" | xargs rm -rf
 ```
+
+```python
+print 'ruichen %s' % ruichen
+```
+
 {% highlight python linenos %}
 def main:
     pass
-<% endhigtlight %>
+<% endhighlight %>
 
 ## To-Do
 My doing list.
