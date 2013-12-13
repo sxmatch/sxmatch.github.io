@@ -8,10 +8,10 @@ tags : [openstack, nova, baremetal, Iroic, deployment]
 
 **如需转载，请标明原文出处以及作者**
 
-这里再提供一个 google doc 的共享地址[here]
-[https://docs.google.com/document/d/1WCBHZathI1RurTZ2VPS9Us9SLZC-uyp7kBN24BEgkTo/edit?usp=sharing]
-
 ----------
+
+这里再提供一个 google doc 的共享地址[here]
+(https://docs.google.com/document/d/1WCBHZathI1RurTZ2VPS9Us9SLZC-uyp7kBN24BEgkTo/edit?usp=sharing)
 
 ## 简介
 Nova BareMetal，我的理解就是通过OpenStack API像管理虚拟机一样管理物理服务器（包括未装OS和安装OS的物理服务器），可以理解为如下对应方式：
@@ -101,7 +101,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 
  {% endhighlight %}
 
- PXE相关内容可以参考[here][http://blog.csdn.net/trochiluses/article/details/11736119]
+ PXE相关内容可以参考[here](http://blog.csdn.net/trochiluses/article/details/11736119)
 
 5. 当前使用Baremetal，至少需要keystone、nova、neutron、glance、nova-compute、dnsmasq和nova-baremetal-deploy-helper这些服务。
 
@@ -189,7 +189,7 @@ nova baremetal-interface-add $ID $MAC
 
 ## Baremetal driver的创建虚拟机流程
 
-![baremetal workflow][https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-13/baremetal.png]
+![baremetal workflow](https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-13/baremetal.png)
 
 1. 首先根据正常nova boot创建instance， flavor为创建的baremetal专用flavor，image为baremetal image。
 
