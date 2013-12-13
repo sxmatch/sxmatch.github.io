@@ -24,9 +24,8 @@ tagline: regexisart
 
 ## Tips
 
-{% highlight python linenos %}
-def main:
-    pass
+{% highlight bash linenos %}
+find . -name "*.tmp" | xargs rm -rf 
 {% endhighlight %}
 
 ## To-Do
