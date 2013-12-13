@@ -15,18 +15,18 @@ tagline: regexisart
 </ul>
 
 ## 最近在做的事
-```
-GAE
-Github
-blog
-keystone
-Jekyll
-```
+
+- GAE
+- Github
+- blog
+- keystone
+- Jekyll
+
 ## Tips
 
-```ksh linenos
+```bash linenos
 $ find . -name "*.tmp" | xargs rm -rf
-```endhighlight
+```
 
 ## To-Do
 My doing list.
