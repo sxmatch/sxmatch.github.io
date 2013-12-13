@@ -72,7 +72,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 
 2. 修改nova的配置文件，wiki原文中说如下的配置都需要加入nova-compute host，但是明显scheduler_host_manager、ram_allocation_ratio和reserved_host_memory_mb应该在scheduler节点配置，其他配置项加入nova-compute host。
     
-    {% highlight ini linenos%}
+    {% highlight ini linenos %}
     
     [DEFAULT]
     scheduler_host_manager = nova.scheduler.baremetal_host_manager.BaremetalHostManager
@@ -159,7 +159,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
 9. 在nova中创建baremetal专用的flavor，其中cpu_arch、deploy_kernel_id和deploy_ramdisk_id要和compute host的nova.conf中的deploy_kernel、deploy_ramdisk和instance_type_extra_specs配置一致
     
-    {% highlight ini linenos %}
+    {% highlight ini %}
     
     instance_type_extra_specs = cpu_arch:{i386|x86_64}
     
@@ -169,7 +169,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
     {% endhighlight %}
 10. 创建nova的flavor
-    {% highlight bash linenos %}
+    {% highlight bash %}
     
     nova flavor-create my-baremetal-flavor $RAM $DISK $CPU
     # cpu_arch must match nova.conf, and of course, also must match your hardware
@@ -180,7 +180,7 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
     
     {% endhighlight %}
     
-10. 将物理服务器信息注册到环境中，hostname、mac、cpu、ram、disk信息和IPMI的IP、user、password，然后将服务器的所有网络接口也注册进环境
+11. 将物理服务器信息注册到环境中，hostname、mac、cpu、ram、disk信息和IPMI的IP、user、password，然后将服务器的所有网络接口也注册进环境
     
     {% highlight bash linenos %}
     
