@@ -10,8 +10,7 @@ tags : [openstack, nova, baremetal, Iroic, deployment]
 
 ----------
 
-这里再提供一个 google doc 的共享地址[here]
-(https://docs.google.com/document/d/1WCBHZathI1RurTZ2VPS9Us9SLZC-uyp7kBN24BEgkTo/edit?usp=sharing)
+这里再提供一个 google doc 的共享地址[here](https://docs.google.com/document/d/1WCBHZathI1RurTZ2VPS9Us9SLZC-uyp7kBN24BEgkTo/edit?usp=sharing)
 
 ## 简介
 Nova BareMetal，我的理解就是通过OpenStack API像管理虚拟机一样管理物理服务器（包括未装OS和安装OS的物理服务器），可以理解为如下对应方式：
@@ -66,126 +65,126 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 
 2. 修改nova的配置文件，wiki原文中说如下的配置都需要加入nova-compute host，但是明显scheduler_host_manager、ram_allocation_ratio和reserved_host_memory_mb应该在scheduler节点配置，其他配置项加入nova-compute host。
 
- {% highlight ini linenos%}
-
- [DEFAULT]
- scheduler_host_manager = nova.scheduler.baremetal_host_manager.BaremetalHostManager
- firewall_driver = nova.virt.firewall.NoopFirewallDriver
- compute_driver = nova.virt.baremetal.driver.BareMetalDriver
- ram_allocation_ratio = 1.0
- reserved_host_memory_mb = 0
- 
- [baremetal]
- net_config_template = /opt/stack/nova/nova/virt/baremetal/net-static.ubuntu.template
- tftp_root = /tftpboot
- power_manager = nova.virt.baremetal.ipmi.IPMI
- driver = nova.virt.baremetal.pxe.PXE
- instance_type_extra_specs = cpu_arch:{i386|x86_64}
- sql_connection = mysql://{user}:{pass}@{host}/nova_bm
-
- {% endhighlight %}
+    {% highlight ini linenos%}
+   
+    [DEFAULT]
+    scheduler_host_manager = nova.scheduler.baremetal_host_manager.BaremetalHostManager
+    firewall_driver = nova.virt.firewall.NoopFirewallDriver
+    compute_driver = nova.virt.baremetal.driver.BareMetalDriver
+    ram_allocation_ratio = 1.0
+    reserved_host_memory_mb = 0
+    
+    [baremetal]
+    net_config_template = /opt/stack/nova/nova/virt/baremetal/net-static.ubuntu.template
+    tftp_root = /tftpboot
+    power_manager = nova.virt.baremetal.ipmi.IPMI
+    driver = nova.virt.baremetal.pxe.PXE
+    instance_type_extra_specs = cpu_arch:{i386|x86_64}
+    sql_connection = mysql://{user}:{pass}@{host}/nova_bm
+   
+    {% endhighlight %}
 
 3. 在nova-compute host安装IPMI和PXE需要的软件dnsmasq ipmitool open-iscsi syslinux。
 
 4. 为了支持PXE需要配置pxelinux.0引导程序、pxelinux.cfg和tftp的boot根目录。
 
- {% highlight bash linenos %}
+    {% highlight bash linenos %}
+   
+    sudo mkdir -p /tftpboot/pxelinux.cfg
+    sudo cp /usr/lib/syslinux/pxelinux.0 /tftpboot/
+    sudo chown -R $NOVA_USER /tftpboot
+   
+    sudo mkdir -p $NOVA_DIR/baremetal/dnsmasq
+    sudo mkdir -p $NOVA_DIR/baremetal/console
+    sudo chown -R $NOVA_USER $NOVA_DIR/baremetal
+   
+    {% endhighlight %}
 
- sudo mkdir -p /tftpboot/pxelinux.cfg
- sudo cp /usr/lib/syslinux/pxelinux.0 /tftpboot/
- sudo chown -R $NOVA_USER /tftpboot
-
- sudo mkdir -p $NOVA_DIR/baremetal/dnsmasq
- sudo mkdir -p $NOVA_DIR/baremetal/console
- sudo chown -R $NOVA_USER $NOVA_DIR/baremetal
-
- {% endhighlight %}
-
- PXE相关内容可以参考[here](http://blog.csdn.net/trochiluses/article/details/11736119)
+    PXE相关内容可以参考[here](http://blog.csdn.net/trochiluses/article/details/11736119)
 
 5. 当前使用Baremetal，至少需要keystone、nova、neutron、glance、nova-compute、dnsmasq和nova-baremetal-deploy-helper这些服务。
 
- {% highlight bash linenos %}
+    {% highlight bash linenos %}
+   
+    # Start dnsmasq for baremetal deployments. Change IFACE and RANGE as needed.
+    # Note that RANGE must not overlap with the instance IPs assigned by Nova or Neutron.
+    sudo dnsmasq --conf-file= --port=0 --enable-tftp --tftp-root=/tftpboot \
+      --dhcp-boot=pxelinux.0 --bind-interfaces --pid-file=/var/run/dnsmasq.pid \
+      --interface=$IFACE --dhcp-range=$RANGE
+   
+    {% endhighlight %}
 
- # Start dnsmasq for baremetal deployments. Change IFACE and RANGE as needed.
- # Note that RANGE must not overlap with the instance IPs assigned by Nova or Neutron.
- sudo dnsmasq --conf-file= --port=0 --enable-tftp --tftp-root=/tftpboot \
-   --dhcp-boot=pxelinux.0 --bind-interfaces --pid-file=/var/run/dnsmasq.pid \
-   --interface=$IFACE --dhcp-range=$RANGE
-
- {% endhighlight %}
-
- 上面dnsmasq的启动参数中包括了pxe启动的引导程序pxelinux.0和部署镜像的tftp根目录位置/tftpboot。这里为了避免neutron-dhcp相应PXE启动的dhcp请求，neutron-dhcp需要停止。
+    上面dnsmasq的启动参数中包括了pxe启动的引导程序pxelinux.0和部署镜像的tftp根目录位置/tftpboot。这里为了避免neutron-dhcp相应PXE启动的dhcp请求，neutron-dhcp需要停止。
 
 6. 在msyql中为baremetal创建独立的nova_bm数据库schema，与nova schema分开，nova-baremetal-manage db sync
 
 7. 准备镜像，通过openstack社区提供的diskimage-builder创建镜像
 
- {% highlight bash linenos %}
-
- git clone https://github.com/openstack/diskimage-builder.git
- cd diskimage-builder
-
- # build the image your users will run
- bin/disk-image-create -u base -o my-image
- # and extract the kernel & ramdisk
- bin/disk-image-get-kernel -d ./ -o my -i $(pwd)/my-image.qcow2
-
- # build the deploy image
- bin/ramdisk-image-create deploy -a i386 -o my-deploy-ramdisk
-
- {% endhighlight %}
-
- 将这些镜像文件上传至`glance`
-
- {% highlight bash linenos %}
-
- glance image-create --name my-vmlinuz --public --disk-format aki  < my-vmlinuz
-
- glance image-create --name my-initrd --public --disk-format ari  <my-initrd
-
- glance image-create --name my-image --public --disk-format qcow2 --container-format bare \
-     --property kernel_id=$MY_VMLINUZ_UUID --property ramdisk_id=$MY_INITRD_UUID <my-image
-
- glance image-create --name deploy-vmlinuz --public --disk-format aki <vmlinuz-$KERNEL
-
- glance image-create --name deploy-initrd --public --disk-format ari <my-deploy-ramdisk.initramfs
-
- {% endhighlight %}
+    {% highlight bash linenos %}
+   
+    git clone https://github.com/openstack/diskimage-builder.git
+    cd diskimage-builder
+   
+    # build the image your users will run
+    bin/disk-image-create -u base -o my-image
+    # and extract the kernel & ramdisk
+    bin/disk-image-get-kernel -d ./ -o my -i $(pwd)/my-image.qcow2
+   
+    # build the deploy image
+    bin/ramdisk-image-create deploy -a i386 -o my-deploy-ramdisk
+   
+    {% endhighlight %}
+   
+    将这些镜像文件上传至`glance`
+   
+    {% highlight bash linenos %}
+   
+    glance image-create --name my-vmlinuz --public --disk-format aki  < my-vmlinuz
+   
+    glance image-create --name my-initrd --public --disk-format ari  <my-initrd
+   
+    glance image-create --name my-image --public --disk-format qcow2 --container-format bare \
+        --property kernel_id=$MY_VMLINUZ_UUID --property ramdisk_id=$MY_INITRD_UUID <my-image
+   
+    glance image-create --name deploy-vmlinuz --public --disk-format aki <vmlinuz-$KERNEL
+   
+    glance image-create --name deploy-initrd --public --disk-format ari <my-deploy-ramdisk.initramfs
+   
+    {% endhighlight %}
 
 8. 在nova中创建baremetal专用的flavor，其中cpu_arch、deploy_kernel_id和deploy_ramdisk_id要和compute host的`nova.conf`中的deploy_kernel、deploy_ramdisk和instance_type_extra_specs配置一致
 
- {% highlight ini linenos %}
-
- instance_type_extra_specs = cpu_arch:{i386|x86_64}
-
- deploy_kernel =$DEPLOY_VMLINUZ_UUID
-
- deploy_ramdisk =$DEPLOY_INITRD_UUID
-
- {% endhighlight %}
-
- {% highlight bash linenos %}
-
- nova flavor-create my-baremetal-flavor $RAM $DISK $CPU
- # cpu_arch must match nova.conf, and of course, also must match your hardware
- nova flavor-key my-baremetal-flavor set \
-  cpu_arch={i386|x86_64} \
-  "baremetal:deploy_kernel_id"=$DEPLOY_VMLINUZ_UUID \
-   "baremetal:deploy_ramdisk_id"=$DEPLOY_INITRD_UUID
-
- {% endhighlight %}
+    {% highlight ini linenos %}
+   
+    instance_type_extra_specs = cpu_arch:{i386|x86_64}
+   
+    deploy_kernel =$DEPLOY_VMLINUZ_UUID
+   
+    deploy_ramdisk =$DEPLOY_INITRD_UUID
+   
+    {% endhighlight %}
+   
+    {% highlight bash linenos %}
+   
+    nova flavor-create my-baremetal-flavor $RAM $DISK $CPU
+    # cpu_arch must match nova.conf, and of course, also must match your hardware
+    nova flavor-key my-baremetal-flavor set \
+     cpu_arch={i386|x86_64} \
+     "baremetal:deploy_kernel_id"=$DEPLOY_VMLINUZ_UUID \
+      "baremetal:deploy_ramdisk_id"=$DEPLOY_INITRD_UUID
+   
+    {% endhighlight %}
 
 9. 将物理服务器信息注册到环境中，hostname、mac、cpu、ram、disk信息和IPMI的IP、user、password，然后将服务器的所有网络接口也注册进环境
 
-{% highlight bash linenos %}
-
-nova baremetal-node-create --pm_address=... --pm_user=... --pm_password=... \
-  $COMPUTE-HOST-NAME $CPU $RAM $DISK $FIRST-MAC
-
-nova baremetal-interface-add $ID $MAC
-
-{% endhighlight %}
+    {% highlight bash linenos %}
+    
+    nova baremetal-node-create --pm_address=... --pm_user=... --pm_password=... \
+      $COMPUTE-HOST-NAME $CPU $RAM $DISK $FIRST-MAC
+    
+    nova baremetal-interface-add $ID $MAC
+    
+    {% endhighlight %}
 
 ## Baremetal driver的创建虚拟机流程
 
@@ -214,6 +213,7 @@ nova baremetal-interface-add $ID $MAC
 - activate_node 等待PXE部署完成
 
 - 如果失败清除以上动作。
+
 
 4. 细心的听众可能发现了，哪怎么知道PXE已经部署结束了呢？这里就要用到nova-baremetal-deploy-helper进程了。nova-baremetal-deploy-helper服务启动之后，会在nova-compute host的10000端口启动一个http监听。当给10000端口发送一个POST请求时，nova-baremetal-deploy-helper会根据消息体中的iscsi iqn，将创建虚拟机时的用户指定的image dd到这个iscsi target中，然后创建swap分区等等，最后将PXE的启动方式从deploy改为boot，最后将数据库中baremetal node的状态改为DEPLOYDONE，nova-compute进程通过查数据库就能知道PXE加载完成了。
 
