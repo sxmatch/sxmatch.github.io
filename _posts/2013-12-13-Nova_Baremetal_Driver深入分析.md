@@ -15,12 +15,12 @@ tags : [openstack, nova, baremetal, Iroic, deployment]
 ## 简介
 Nova BareMetal，我的理解就是通过OpenStack API像管理虚拟机一样管理物理服务器（包括未装OS和安装OS的物理服务器），可以理解为如下对应方式：
 
-| VM        |  Baremetal |
-| :-------- | :------ |
-| 创建虚拟机 | PXE启动，加载操作系统 |
-| 启动虚拟机 | 上电 |
-| 停止虚拟机 | 下电 |
-| 重启虚拟机 | 重启服务器 |
+VM        |  Baremetal
+:-------- | :------
+创建虚拟机 | PXE启动，加载操作系统
+启动虚拟机 | 上电
+停止虚拟机 | 下电
+重启虚拟机 | 重启服务器
 
 当前的形式是一个Nova Driver和KVM、XEN、Vmware在Nova中同属一层的代码结构。当前Baremetal Driver分为两部分：NodeDriver和PowerManager，NodeDriver的实现有PXE、Tilera；PowerManager的实现有IPMI、Tilera_PDU、Iboot、VirtualPower。这篇文档就介绍大家最熟悉的PXE+IPMI。
 
@@ -196,23 +196,23 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 
 3. 请求进入nova-compute host因为配置的是BareMetalDriver，进入spawn方法开始创建baremetal instance，根据scheduler选择的instance[‘node’]的uuid查询nova_bm库，将instance_uuid和instance.hostname更新到数据库，然后作如下动作：
 
-- _plug_vifs 将neutron分配的网络uuid和注册的pif关联- 
-
-- _attach_block_devices 将cinder块设备通过iscsi导出到nova-compute host，貌似是通过compute host桥接到baremetal node
-
-- _start_firewall 配置的是NoopFirewallDriver所以什么都不做
-
-- cache_images 从instance_type中导出kernel_id、ramdisk_id、deploy_kernel_id和deploy_ramdisk_id，从glance下载对应的image文件保存在tftpboot目录下的按照instance_uuid划分的子目录中，并将qcow2镜像转化为raw镜像
-
-- activate_bootloader 生成pxelinux.cfg文件，用baremetal的mac地址区分不同的配置，同时可以通过neutron生成的网络信息，配置baremetal node的网络，此功能可配置
-
-- power_off
-
-- power_on 通过IPMI重启触发PXE流程
-
-- activate_node 等待PXE部署完成
-
-- 如果失败清除以上动作。
+    - _plug_vifs 将neutron分配的网络uuid和注册的pif关联- 
+    
+    - _attach_block_devices 将cinder块设备通过iscsi导出到nova-compute host，貌似是通过compute host桥接到baremetal node
+    
+    - _start_firewall 配置的是NoopFirewallDriver所以什么都不做
+    
+    - cache_images 从instance_type中导出kernel_id、ramdisk_id、deploy_kernel_id和deploy_ramdisk_id，从glance下载对应的image文件保存在tftpboot目录下的按照instance_uuid划分的子目录中，并将qcow2镜像转化为raw镜像
+    
+    - activate_bootloader 生成pxelinux.cfg文件，用baremetal的mac地址区分不同的配置，同时可以通过neutron生成的网络信息，配置baremetal node的网络，此功能可配置
+    
+    - power_off
+    
+    - power_on 通过IPMI重启触发PXE流程
+    
+    - activate_node 等待PXE部署完成
+    
+    - 如果失败清除以上动作。
 
 
 4. 细心的听众可能发现了，哪怎么知道PXE已经部署结束了呢？这里就要用到nova-baremetal-deploy-helper进程了。nova-baremetal-deploy-helper服务启动之后，会在nova-compute host的10000端口启动一个http监听。当给10000端口发送一个POST请求时，nova-baremetal-deploy-helper会根据消息体中的iscsi iqn，将创建虚拟机时的用户指定的image dd到这个iscsi target中，然后创建swap分区等等，最后将PXE的启动方式从deploy改为boot，最后将数据库中baremetal node的状态改为DEPLOYDONE，nova-compute进程通过查数据库就能知道PXE加载完成了。
