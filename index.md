@@ -24,18 +24,13 @@ tagline: regexisart
 
 ## Tips
 
-```
+```bash
    $ find . -name "*.tmp" | xargs rm -rf
 ```
-
-```
+{% highlight python linenos %}
 def main:
     pass
-```
-
-> test
-
-> **test**
+<% endhigtlight %>
 
 ## To-Do
 My doing list.
