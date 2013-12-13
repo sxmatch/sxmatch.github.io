@@ -190,9 +190,9 @@ TripleO所希望达到的通过OpenStack部署OpenStack的步骤如下：
 
 1. 首先根据正常nova boot创建instance， flavor为创建的baremetal专用flavor，image为baremetal image。
 
-2. nova-scheduler配置为BaremetalHostManager，这个类继承自default的HostManager，所以可以同时处理vm和baremetal的scheduler，nova-compute host的nova.conf中配置的[baremetal]选项中的instance_type_extra_specs会被刷新到NodeStats中，当创建instance的flavor的extra_specs根据默认配置的ComputeCapabilitiesFilter找到符合配置的nova-compute host将请求发送到这个baremetal nova-compute host。
+2. nova-scheduler配置为BaremetalHostManager，这个类继承自default的HostManager，所以可以同时处理vm和baremetal的scheduler，nova-compute host的nova.conf中配置的\[baremetal\]选项中的instance_type_extra_specs会被刷新到NodeStats中，当创建instance的flavor的extra_specs根据默认配置的ComputeCapabilitiesFilter找到符合配置的nova-compute host将请求发送到这个baremetal nova-compute host。
 
-3. 请求进入nova-compute host因为配置的是BareMetalDriver，进入spawn方法开始创建baremetal instance，根据scheduler选择的instance[‘node’]的uuid查询nova_bm库，将instance_uuid和instance.hostname更新到数据库，然后作如下动作：
+3. 请求进入nova-compute host因为配置的是BareMetalDriver，进入spawn方法开始创建baremetal instance，根据scheduler选择的instance\['node'\]的uuid查询nova_bm库，将instance_uuid和instance.hostname更新到数据库，然后作如下动作：
 
     - _plug_vifs 将neutron分配的网络uuid和注册的pif关联- 
     
