@@ -112,7 +112,7 @@ objectClass: organizationalUnit
 
 将Identity的后端配置为ldap
 
-{% higtlight ini linenos %}
+{% highlight ini linenos %}
 
 [identity]  
 driver = keystone.identity.backends.ldap.Identity  
