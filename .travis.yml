@@ -1,5 +1,8 @@
 language: ruby
+bundler_args: --without development
 script: "bundle exec jekyll build"
 branches:
   only:
     - master
+notifications:
+  email: false
