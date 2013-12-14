@@ -2,7 +2,7 @@
 layout: post
 category : OpenStack
 tagline: "regexisart"
-tags : [OpenStack, keystone, LDAP]
+tags : [OpenStack, cinder, nova, iscsi, 存储, 可靠性]
 ---
 {% include JB/setup %}
 
