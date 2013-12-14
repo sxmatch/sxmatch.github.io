@@ -76,7 +76,7 @@ olcObjectClasses: {0}( 2.16.840.1.113730.3.2.2 NAME 'inetOrgPerson' DESC 'RFC279
 
 `add.ldif`
 
-{% hightlight yaml linenos %}
+{% highlight yaml linenos %}
 
 dn: ou=users,dc=openstack,dc=org  
 objectClass: top  

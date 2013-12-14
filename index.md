@@ -16,7 +16,6 @@ tagline: regexisart
 
 ## 最近在做的事
 
-- GAE
 - Github
 - blog
 - keystone
@@ -25,21 +24,15 @@ tagline: regexisart
 ## Tips
 
 {% highlight bash linenos %}
+
 find . -name "*.tmp" | xargs rm -rf 
+
 {% endhighlight %}
 
 ## To-Do
 My doing list.
 
-<ul class="posts">
-  {% for draft in site.drafts %}
-    <li> &raquo; <span>{{ draft.title }}</span></li>
-  {% endfor %}
-</ul>
 
-## From
+----------
 
-Read [Jekyll Quick Start](http://jekyllbootstrap.com/usage/jekyll-quick-start.html)
-
-Complete usage and documentation available at: [Jekyll Bootstrap](http://jekyllbootstrap.com)
-
+陈锐 ruichen @kiwik chenrui_momo@163.com
