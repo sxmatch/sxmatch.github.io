@@ -42,6 +42,7 @@ Nova BareMetal，我的理解就是通过OpenStack API像管理虚拟机一样�
 </table>
 
 
+
 当前的形式是一个Nova Driver和KVM、XEN、Vmware在Nova中同属一层的代码结构。当前Baremetal Driver分为两部分：NodeDriver和PowerManager，NodeDriver的实现有PXE、Tilera；PowerManager的实现有IPMI、Tilera_PDU、Iboot、VirtualPower。这篇文档就介绍大家最熟悉的PXE+IPMI。
 
 
@@ -241,8 +242,10 @@ Nova BareMetal Driver从OpenStack Grizzly版本加入，当前已经从Nova中�
 4. 细心的听众可能发现了，哪怎么知道PXE已经部署结束了呢？这里就要用到`nova-baremetal-deploy-helper`进程了。nova-baremetal-deploy-helper服务启动之后，会在nova-compute host的**10000**端口启动一个http监听。当给10000端口发送一个POST请求时，nova-baremetal-deploy-helper会根据消息体中的iscsi iqn，将创建虚拟机时的用户指定的image dd到这个iscsi target中，然后创建swap分区等等，最后将PXE的启动方式从deploy改为boot，最后将数据库中baremetal node的状态改为**DEPLOYDONE**，nova-compute进程通过查数据库就能知道PXE加载完成了。
 
 5. 到现在为止还有两个问题没有想通：谁向nova-baremetal-deploy-helper的10000端口发消息？为什么要用iscsi？第一个问题真的是找了很久都没有发现，python代码中没有给10000端口发POST消息的位置，后来还是在一个baremetal的rst文档中发现了一点线索。
+    
     > nova-baremetal-deploy-helper works in conjunction with diskimage-builder's "deploy" ramdisk to write an image from glance onto the baremetal node's disks using iSCSI。
-
+    >
+    
 6. diskimage-builder也是OpenStack项目下的一个image制作工具，属于**TripleO**的一部分。这部分了解的不是很多，一个镜像制作工具，可以制作cloudimage和deployimage，在制作镜像的过程中，可以安装需要的软件和脚本，如果没有猜错的话这些都应该叫**elements**，文档的开始baremetal的image也是通diskimage-builder制作的，还导出了deploy-ramdisk和deploy-kernel，上面那个向nova-baremetal-deploy-helper发送10000 POST消息的脚本就是在deploy-ramdisk中执行的，千辛万苦的终于在github的`diskimage-builder/elements/deploy/init.d/80-deploy`的仓库里发现了这样一段代码：
     
     {% highlight bash linenos %}
