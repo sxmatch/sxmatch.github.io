@@ -35,4 +35,4 @@ My doing list.
 
 ----------
 
-陈锐 ruichen @kiwik chenrui_momo@163.com
+陈锐 ruichen @kiwik chenrui.momo@gmail.com
