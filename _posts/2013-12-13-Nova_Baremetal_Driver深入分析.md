@@ -1,8 +1,8 @@
 ---
 layout: post
-category : openstack
+category : OpenStack
 tagline: "regexisart"
-tags : [openstack, nova, baremetal, Iroic, deployment]
+tags : [OpenStack, nova, baremetal, Iroic, deployment]
 ---
 {% include JB/setup %}
 
