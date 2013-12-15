@@ -8,6 +8,10 @@ tags : [OpenStack, keystone, LDAP]
 
 **如需转载，请标明原文出处以及作者**
 
+*陈锐 ruichen @kiwik*
+
+*2013/07/09 23:16:50 *
+
 ----------
 
 *写在最前面：*
@@ -45,7 +49,7 @@ LDAP的默认schema不能直接和openstack配合使用，有些openstack的用�
 
 `modify.ldif`
 
-{% highlight yaml linenos %}
+{% highlight ini %}
 
 dn: cn={0}core,cn=schema,cn=config  
 changetype: modify  
@@ -76,7 +80,7 @@ olcObjectClasses: {0}( 2.16.840.1.113730.3.2.2 NAME 'inetOrgPerson' DESC 'RFC279
 
 `add.ldif`
 
-{% highlight yaml linenos %}
+{% highlight ini %}
 
 dn: ou=users,dc=openstack,dc=org  
 objectClass: top  
@@ -233,9 +237,7 @@ keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $CINDER_USER --role
 
 ![][6]
 
-注意：keystone user-role-list如果执行失败，没有关系，这不是LDAP配置的问题，是一个keystone-client的bug，通过Rest Client重新验证一下就可以了
-
-[bug](https://bugs.launchpad.net/python-keystoneclient/+bug/1058750)
+注意：keystone user-role-list如果执行失败，没有关系，这不是LDAP配置的问题，是一个keystone-client的[bug](https://bugs.launchpad.net/python-keystoneclient/+bug/1058750)，通过Rest Client重新验证一下就可以了
 
 ## 查看LDAP中的数据结构
 
@@ -508,19 +510,19 @@ restart_openstack_all_service
 
 脚本中包括：
 
-- #step0 install ldap and setpassword
+- step0 install ldap and setpassword
 
-- #step1 check ldap login
+- step1 check ldap login
 
-- #step2 modify ldap schema
+- step2 modify ldap schema
 
-- #step3 modify keystone.conf
+- step3 modify keystone.conf
 
-- #step4 init keystone
+- step4 init keystone
 
-- #step5 check keystone
+- step5 check keystone
 
-- #step6 restartopenstack all service
+- step6 restartopenstack all service
 
 最后一步重启所有openstack服务的步骤，会重启本节点的所有openstack进程，如果有其他节点需要手动重启
 
@@ -533,13 +535,6 @@ restart_openstack_all_service
 最后附送ubuntu环境下完全删除LDAP的命令
 
 `apt-get purge slapd`
-
-
-----------
-
-*陈锐 ruichen @kiwik*
-
-2013/07/09 23:16:50 
 
 [1]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-14/1.jpg
 [2]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-14/2.jpg

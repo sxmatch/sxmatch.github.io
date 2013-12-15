@@ -8,6 +8,10 @@ tags : [OpenStack, cinder, nova, iscsi, 存储, 可靠性]
 
 **如需转载，请标明原文出处以及作者**
 
+*陈锐 ruichen @kiwik*
+
+*2013/08/22 20:30:29 *
+
 ----------
 
 *写在最前面：*
@@ -69,11 +73,4 @@ iscsi target端重启，等同于网络断链，target端重新启动之后，is
 对于重启计算节点的情况，还有另一个解决办法，将**nova.conf**的`resume_guests_state_on_host_boot=true`，当计算节点重启之后，会自动拉起节点上的本来是Active的虚拟机，并建立iscsi连接，但是shutdown的虚拟机还需要手动恢复。
 
 恢复方法参考openstack官方文档[here](http://docs.openstack.org/trunk/openstack-ops/content/maintenance.html)
-
-
-----------
-
-*陈锐 ruichen @kiwik*
-
-2013/08/22 20:30:29 
 

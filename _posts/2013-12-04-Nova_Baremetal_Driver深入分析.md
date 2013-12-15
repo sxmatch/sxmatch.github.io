@@ -8,6 +8,10 @@ tags : [OpenStack, nova, baremetal, Iroic, deployment]
 
 **如需转载，请标明原文出处以及作者**
 
+*陈锐 ruichen @kiwik*
+
+*2013/12/04 17:01:07 *
+
 ----------
 
 这里再提供一个 google doc 的共享地址[here](https://docs.google.com/document/d/1WCBHZathI1RurTZ2VPS9Us9SLZC-uyp7kBN24BEgkTo/edit?usp=sharing)
@@ -320,10 +324,3 @@ http://www.slideshare.net/devananda1/ods-havana-provisioning-bare-metal-with-ope
 https://github.com/openstack/diskimage-builder
 
 http://blog.csdn.net/ruixj/article/details/3772752
-
-
-----------
-
-*陈锐 ruichen @kiwik*
-
-2013/12/04 17:01:07 
