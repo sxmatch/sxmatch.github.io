@@ -49,7 +49,7 @@ LDAP的默认schema不能直接和openstack配合使用，有些openstack的用�
 
 `modify.ldif`
 
-{% highlight ini %}
+{% highlight bash %}
 
 dn: cn={0}core,cn=schema,cn=config  
 changetype: modify  
@@ -80,7 +80,7 @@ olcObjectClasses: {0}( 2.16.840.1.113730.3.2.2 NAME 'inetOrgPerson' DESC 'RFC279
 
 `add.ldif`
 
-{% highlight ini %}
+{% highlight bash %}
 
 dn: ou=users,dc=openstack,dc=org  
 objectClass: top  
