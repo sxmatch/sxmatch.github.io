@@ -62,7 +62,7 @@ vim /etc/apt/sources.list
 
 {% endhighlight %}
 
-{% highlight bash linenos%}
+{% highlight bash %}
 
 deb http://mirrors.sohu.com/ubuntu/ precise-updates main restricted
 deb-src http://mirrors.sohu.com/ubuntu/ precise-updates main restricted
@@ -97,7 +97,7 @@ to
 
 创建`~/.pip/pip.conf`文件，将pip的源配置成国内的源，超时时间也调长
 
-{% highlight ini linenos%}
+{% highlight ini %}
 
 [global]
 timeout = 6000
@@ -118,7 +118,7 @@ mirrors = http://e.pypi.python.org
 
 使用Vagrant的时候，如果虚拟机需要使用主机代理，首先找到默认网关，默认网关加上代理端口就可以了，我用的是goagent，所以配置就是这样了
 
-{% highlight bash linenos%}
+{% highlight bash %}
 
 http_proxy="10.0.2.2:8087"
 https_proxy="10.0.2.2:8087"
@@ -128,4 +128,4 @@ no_proxy="127.0.0.1"
 
 ![][1]
 
-[1]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-21/1.jpg
+[1]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-21/1.JPG
