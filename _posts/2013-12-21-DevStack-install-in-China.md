@@ -127,7 +127,8 @@ no_proxy="127.0.0.1"
 {% endhighlight %}
 
 ![][1]
+
 ![][2]
 
 [1]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-21/1.JPG
-[1]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-21/2.JPG
+[2]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2013-12-21/2.JPG
