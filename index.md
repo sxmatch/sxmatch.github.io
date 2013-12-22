@@ -15,20 +15,20 @@ tagline: regexisart
 
 ## Doing list
 
-- Github
-- blog
-- win-sshfs
-- Vagrant
-- DevStack
+    - Github
+    - blog
+    - win-sshfs
+    - Vagrant
+    - DevStack
 
 ## Tips
 
-{% highlight python linenos %}
-
-if __name__ == '__main__':
-    print 'Hello World OpenStack!'
-
-{% endhighlight %}
+    {% highlight python linenos %}
+    
+    if __name__ == '__main__':
+        print 'Hello World OpenStack!'
+    
+    {% endhighlight %}
 
 ----------
 
