@@ -64,7 +64,7 @@ config.vm.synced_folder "D:/dev/PyProjects/remote", "/vagrant_data", disabled: f
 
 {% endhighlight %}
 
-- 所有对于`Vagrantfile`的修改，都需要执行 vagrant reload`重启guest OS生效
+- 所有对于`Vagrantfile`的修改，都需要执行 `vagrant reload`重启guest OS生效
 - 如果虚拟机创建成功，DevStack安装好了之后，就可以通过`vagrant package`命令将这个已配置好DevStack的Ubuntu虚拟机打包成box文件，用于以后的环境恢复，或者直接分发给项目组的同事使用，关于DevStack的安装配置可以参考的我的另一篇[blog](http://kiwik.github.io/openstack/2013/12/21/DevStack-install-in-China/)
 
 ![][1]
