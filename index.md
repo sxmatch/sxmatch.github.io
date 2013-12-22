@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Hello World!
+title: Hello World OpenStack!
 tagline: regexisart
 ---
 {% include JB/setup %}
@@ -23,12 +23,13 @@ tagline: regexisart
 
 ## Tips
 
-{% highlight bash linenos %}
+{% highlight python linenos %}
 
-find . -name "*.tmp" | xargs rm -rf 
+if __name__ == '__main__':
+    print 'Hello World OpenStack!'
 
 {% endhighlight %}
 
 ----------
 
-陈锐 ruichen @kiwik chenrui.momo@gmail.com
+陈锐 ruichen @kiwik at sina chenrui.momo@gmail.com
