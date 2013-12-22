@@ -5,21 +5,21 @@ tagline: regexisart
 ---
 {% include JB/setup %}
 
-## Ready
-我已经完成的blogs 
+## Ready blogs 
 
 <ul class="posts">
   {% for post in site.posts %}
-    <p><li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li></p>
+    <p><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></p>
   {% endfor %}
 </ul>
 
-## 最近在做的事
+## Doing list
 
 - Github
 - blog
-- keystone
-- Jekyll
+- win-sshfs
+- Vagrant
+- DevStack
 
 ## Tips
 
@@ -28,10 +28,6 @@ tagline: regexisart
 find . -name "*.tmp" | xargs rm -rf 
 
 {% endhighlight %}
-
-## To-Do
-My doing list.
-
 
 ----------
 
