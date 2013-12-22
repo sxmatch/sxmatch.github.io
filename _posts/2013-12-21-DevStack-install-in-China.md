@@ -22,7 +22,7 @@ tags : [OpenStack, DevStack, install, pip, apt-get, Ubuntu]
 
 ## step0
 
-创建一个虚拟机，我的开发环境是Windows 7，所以使用了`Vagrant`快速创建了一个Ubuntu 12.04 x64的虚拟机，在Windows上使用Vagrant可以参考我的另一篇[blog]()，在这里就不在多说了。
+创建一个虚拟机，我的开发环境是Windows 7，所以使用了`Vagrant`快速创建了一个Ubuntu 12.04 x64的虚拟机，在Windows上使用Vagrant可以参考我的另一篇[blog](http://kiwik.github.io/openstack/2013/12/22/%E4%BD%BF%E7%94%A8Vagrant%E5%92%8Cwin-sshfs%E6%94%AF%E6%8C%81OpenStack%E5%BC%80%E5%8F%91/)，在这里就不在多说了。
 
 ## step1
 

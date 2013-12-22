@@ -10,7 +10,7 @@ tags : [OpenStack, Vagrant, develop, win-sshfs]
 
 *陈锐 ruichen @kiwik*
 
-*2013/12/22 10:50:44  *
+*2013/12/22 19:16:36 *
 
 ----------
 
@@ -71,6 +71,7 @@ win-sshfs的功能很强大，可以将Linux的目录直接mount到Windows系统
 具体的安装，跟着官方文档一步一步来就可以了，先需要把`.Net`和`Dokan`安装好，win-sshfs安装的时候会检查依赖的库是否已经安装。
 
 根据下图所示，输入本机ip 127.0.0.1和用户名密码，默认是vagrant/vagrant，记得要把端口改为2222，点击Mount，就开始挂载了，当右下角图标变为Unmount，就表示挂在成功，可以直接去**我的电脑**里看，应该多了一个根盘符，点开就可以直接访问Vagrant guest OS上的文件了，可以选择你喜欢的IDE直接编辑，我使用的Pycharm直接将根盘符中nova文件夹导入，就可以开始编辑nova的源代码了
+
 ![][2]
 ![][3]
 
