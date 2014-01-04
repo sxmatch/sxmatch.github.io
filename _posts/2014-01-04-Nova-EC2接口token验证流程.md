@@ -24,13 +24,9 @@ tags : [OpenStack, nova, keystone, EC2, token]
 
 ## Keystone
 
-使用euca2ools之前，首先要通过keystone创建EC2的acces\_key和secret\_key，直接使用命令为某个project下的某个user创建一组access\_key和secret\_key，以备后面使用
+使用euca2ools之前，首先要通过keystone创建EC2的acces\_key和secret\_key，直接使用命令`keystone ec2-credentials-create`为某个project下的某个user创建一组access\_key和secret\_key，以备后面使用
 
-{% highlight bash %}
-
-
-
-{% endhighlight %}
+![](https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2014-01-04/2.png)
 
 ## Horizon
 
@@ -65,7 +61,9 @@ alias ec2-upload-bundle="ec2-upload-bundle -a ${EC2_ACCESS_KEY} -s ${EC2_SECRET_
 其中最有用的就是以下三个环境变量，EC2\_URL就是指向nova的ec2-api，EC2_ACCESS_KEY和EC2_SECRET_KEY就是，通过keystone ec2-credentials-create创建的某project的某个用户的access\_key和secret\_key
 
 > export EC2_ACCESS_KEY=14d40f23e54148579ea559c07bfaa42a
+>
 > export EC2_SECRET_KEY=921a3445e0c2485d83458251d1803219
+>
 > export EC2_URL=http://172.25.16.1:8773/services/Cloud
 
 ## Nova EC2 API
@@ -107,7 +105,7 @@ ec2keystoneauth就是用来兼容EC2类型的鉴权请求的，在这个filter�
 
 keystone接受的请求就是类似这样的
 
-{% highlight json %}
+{% highlight bash %}
 
 {
     'access': '14d40f23e54148579ea559c07bfaa42a',
@@ -129,7 +127,7 @@ keystone接受的请求就是类似这样的
 
 keystone会在Ec2Controller中的authenticate方法处理这个POST请求，通过access\_key查询证书，得到secret\_key，然后根据request参数中SignatureVersion，使用不同的签名生成方法结合secret\_key，验证请求中的Signature是否合法，以保证请求不被篡改。验证成功之后，就根据证书的user\_id和project等信息生成一个v2 token。
 
-keystone返回的就是一个对应配置的环境变量中$EC2\_ACCESS\_KEY和$EC2\_SECRET\_KEY对应的用户的token，nova然后将token中的user\_id，tenant\_id，roles等信息保存在nova的RequestContext中，然后继续处理，后面的处理就和OpenStack的token一致了。
+keystone返回的就是一个与环境变量$EC2\_ACCESS\_KEY和$EC2\_SECRET\_KEY对应的用户的token，nova然后将token中的user\_id，tenant\_id，roles等信息保存在nova的RequestContext中，然后继续处理，后面的处理就和OpenStack的token一致了。
 
 ## cloudrequest
 
@@ -201,6 +199,6 @@ AVAILABILITYZONE        aztest001       available
 
 ## 参考链接
 
-http://wherenow.org/openstack-nova-ec2-api-flow/
-http://www.idevelopment.info/data/AWS/AWS_Tips/AWS_Management/AWS_8.shtml#Install Amazon EC2 Tools (Linux)
-https://computing.seas.harvard.edu/display/CLOUD/EC2+for+Openstack
+[http://wherenow.org/openstack-nova-ec2-api-flow/](http://wherenow.org/openstack-nova-ec2-api-flow/)
+
+[https://computing.seas.harvard.edu/display/CLOUD/EC2+for+Openstack](https://computing.seas.harvard.edu/display/CLOUD/EC2+for+Openstack)
