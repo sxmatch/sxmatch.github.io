@@ -15,10 +15,10 @@ tagline: regexisart
 
 ## Doing list
 
-- Github
-- blog
+- Keystone token binding
+- rpm build
 - win-sshfs
-- Vagrant
+- git
 - DevStack
 
 ## Tips
