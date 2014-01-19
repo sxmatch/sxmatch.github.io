@@ -2,7 +2,7 @@
 layout: post
 category : OpenStack
 tagline: "regexisart"
-tags : [OpenStack, development, win-sshfs, git, DevStack]
+tags : [OpenStack, develop, win-sshfs, git, DevStack]
 ---
 {% include JB/setup %}
 
@@ -10,7 +10,7 @@ tags : [OpenStack, development, win-sshfs, git, DevStack]
 
 *陈锐 ruichen @kiwik*
 
-*2014/1/19 11:41:58 *
+*2014/1/18 21:41:58 *
 
 ----------
 
