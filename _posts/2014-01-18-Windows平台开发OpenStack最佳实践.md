@@ -20,7 +20,7 @@ tags : [OpenStack, development, win-sshfs, git, DevStack]
 
 可能大多数中国的OpenStack开发者都是在Windows平台上开发代码，那么OpenStack的[开发者指导](http://docs.openstack.org/developer/nova/devref/development.environment.html)对我们的用处就不大。
 
-### 目标
+## 目标
 
 大家一般的开发流程是在Windows上开发完代码，然后用win-scp或者Filezilla拷贝到Linux环境上做pep8，UT或者DevStack的验证，如果有问题再修改，再重新同步，中间可能还涉及到dos2unix的文件转换，想想就头大。
 
@@ -34,11 +34,11 @@ tags : [OpenStack, development, win-sshfs, git, DevStack]
 - DevStack
 - git review
 
-### IDE
+## IDE
 
 Windows平台上推荐Pycharm，功能很强大，3.0还提供了社区免费版，当然还有eclipse+pydev，也不错。
 
-### pep8 + UT + DevStack + git review
+## pep8 + UT + DevStack + git review
 
 好戏来了，Windows上怎么跑pep8、UT、DevStack？
 
@@ -68,15 +68,17 @@ git config --global core.autocrlf input
 
 {% endhighlight %}
 
-### win-sshfs
+## win-sshfs
 
-最后一个东西`win-sshfs`，这个是将Windows上的IDE环境和Linux上的git，pep8，UT和DevStack连接的关键。可以参考的我的另一篇[blog](http://kiwik.github.io/openstack/2013/12/22/%E4%BD%BF%E7%94%A8Vagrant%E5%92%8Cwin-sshfs%E6%94%AF%E6%8C%81OpenStack%E5%BC%80%E5%8F%91/)。
+最后一个东西`win-sshfs`，这个是将Windows上的IDE环境和Linux上的git，pep8，UT和DevStack连接的关键。win-sshfs可以参考的我的另一篇[blog](http://kiwik.github.io/openstack/2013/12/22/%E4%BD%BF%E7%94%A8Vagrant%E5%92%8Cwin-sshfs%E6%94%AF%E6%8C%81OpenStack%E5%BC%80%E5%8F%91/)。
 
-win-sshfs说的简单一点就是通过ssh，将Linux的一个目录，挂载到Windows上作为一个盘符。我的设置是这样的。
+*win-sshfs说的简单一点就是通过ssh，将Linux的一个目录，挂载到Windows上作为一个盘符。*
+
+我的设置是这样的。
 
 ![](https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2014-01-19/1.PNG)
 
-需要注意的是，ssh的登录用户一定要和DevStack的安装用户一致，这样可以保证在Windows上打开OpenStack源文件时，文件的用户权限不被修改。我使用vagrant安装的DevStack，所以登录用户是vagrant。由于DevStack也是在github上git clone的OpenStack的最新代码，所以直接使用/opt/stack/下已经git clone好的代码就可以了。直接映射Linux路径/opt/stack/。挂载成功之后就是H：盘。
+需要注意的是，ssh的登录用户一定要和DevStack的安装用户一致，这样可以保证在Windows上打开OpenStack源文件时，文件的用户权限不被修改。我使用vagrant安装的DevStack，所以登录用户是vagrant。由于DevStack也是在github上git clone的OpenStack的最新代码，所以直接使用/opt/stack/下已经git clone好的代码就可以了。直接映射Linux路径`/opt/stack/`。挂载成功之后就是H：盘。
 
 然后用Pycharm直接打开H：盘上的目录，导入工程。
 
@@ -91,7 +93,7 @@ win-sshfs说的简单一点就是通过ssh，将Linux的一个目录，挂载到
 - Pycharm或者Eclipse中的换行，要改成Linux兼容模式
 - git config要设置成`core.autocrlf=input`
 
-> 原因是我们直接修改的是Linux Guest OS中的文件，linux git config中`core.autocrlf=false`，所以要避免把Windows上的CRLF提交到git仓库中。
+原因是我们直接修改的是Linux Guest OS中的文件，Linux git config中`core.autocrlf=false`，所以要避免把Windows上的CRLF提交到git仓库中。
 
 ![](https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2014-01-19/4.PNG)
 
