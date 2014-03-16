@@ -36,7 +36,7 @@ token实际的scope最终转化为两种domain和project。
 
 ##授权
 
-keystone的授权(`create_grant`)过程，其实是一个三方关联的过程，三方就是：actor（被授权的主体），role（权限），target（被授权的范围）。实际授权过程可以这样理解：
+keystone的授权（`create_grant`）过程，其实是一个三方关联的过程，三方就是：actor（被授权的主体），role（权限），target（被授权的范围）。实际授权过程可以这样理解：
 
 > 为actor在target的范围内赋予role的权利。
 
@@ -52,7 +52,7 @@ keystone默认的**policy.json**，其实是拥有admin角色的用户可以做�
 
 我们来分析一下是怎么做到的，来看其中的一段例子，摘自policy.v3cloudsample.json
 
-{% highlight json lineno %}
+{% highlight linenos %}
 
 "admin_required": "role:admin",
 
@@ -64,7 +64,7 @@ keystone默认的**policy.json**，其实是拥有admin角色的用户可以做�
 
 {% endhighlight %}
 
-先来看create\_project，首先要求admin角色这边没有什么问题，需要注意的是and的后半句**domain\_id:%(project.domain\_id)s**，这条规则的意思就是create\_project时，使用的token的domain\_id必须等于project所在的domain。
+先来看create\_project，首先要求admin角色，需要注意的是and的后半句**domain\_id:%(project.domain\_id)s**，这条规则的意思就是create\_project时，使用的token的domain\_id必须等于project所在的domain的domain\_id。
 
 也就是如下场景：
 
@@ -75,7 +75,7 @@ keystone默认的**policy.json**，其实是拥有admin角色的用户可以做�
 
 这里有几个关键点需要注意，首先userA在domainA内必须要有admin权限，这样才能满足**rule:admin\_required**，其次，token需要是一个domain scope的token，这样token中才会有**domain\_id** ，再次，创建project的时候，domain\_id参数必须等于domainA的id，这样才能满足**domain\_id:%(project.domain\_id)s**。
 
-这样一条规则的意义在于，可以限制只有在domainA内有权限的用户才能在domainA创建project。
+*这样一条规则的意义在于，可以限制只有在domainA内有权限的用户才能在domainA创建project。*
 
 get\_project比较好理解，就是查询的project的domain\_id必须和token的domain\_id相同，也就是只能查询token所在范围内的project。
 
@@ -85,7 +85,7 @@ keystone增加了domain这样一个概念之后，其实也就把keystone本身�
 
 policy.v3cloudsample.json中又增加了几种的权限规则，例如：cloud\_admin、domain\_admin、project\_domain。大家可以自己结合policy.v3cloudsample.json来看一下它们各自的作用。
 
-{% highlight json lineno %}
+{% highlight linenos %}
 
 "admin_required": "role:admin",
 
