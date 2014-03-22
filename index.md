@@ -15,11 +15,11 @@ tagline: regexisart
 
 ## Doing list
 
-- Keystone token binding
-- rpm build
-- win-sshfs
+- Keystone
+- Heat
+- cfn-tools
 - git
-- DevStack
+- HA deployment
 
 ## Tips
 
@@ -32,4 +32,4 @@ if __name__ == '__main__':
 
 ----------
 
-陈锐 ruichen @kiwik at sina chenrui.momo@gmail.com
+陈锐 Rui Chen @kiwik at sina chenrui.momo@gmail.com
