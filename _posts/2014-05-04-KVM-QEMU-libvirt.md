@@ -28,13 +28,13 @@ KVM是`Kernel-based Virtual Machine`的缩写。从Linux kernel 2.6.20开始就�
 
 ![][1]
 
-KVM支持用户态(Userspace)进程通过KVM内核(Kernel)模块利用CPU的虚拟化技术创建虚拟机。虚拟机的vCPU映射到进程中的线程，虚拟机的RAM映射到进程的内存地址空间，IO和外围设备通过进程进行虚拟化，也就是通过QEMU。所以我们看到在OpenStack中创建一个虚拟机就对应一个计算节点的qemu-kvm进程。
+KVM支持用户态(Userspace)进程通过KVM内核(Kernel)模块利用CPU的虚拟化技术创建虚拟机。虚拟机的vCPU映射到进程中的线程，虚拟机的RAM映射到进程的内存地址空间，IO和外围设备通过进程进行虚拟化，也就是通过QEMU。所以我们看到在OpenStack中创建一个虚拟机就对应一个计算节点的QEMU进程。
 
 再来看一下KVM的内存模型，这和我正在做的那个blueprint相关(Memory Balloon stats)。
 
 ![][2]
 
-刚才说到guest OS RAM的地址空间映射到qemu-kvm进程的内存地址空间，这样进程就可以很容易的对于guest OS的RAM进行控制，当guest需要使用RAM时，qemu-kvm就在自己的进程内存空间中划分一段给guest用。对于guest OS设置了MaxMemory和CurrentMemory之后，guest OS的RAM上限也就有了，就是MaxMemory，如果当前的guest实际使用不了那么多RAM，就可以将CurrentMemory调小，将多余的内存还给host，guest中看到的内存大小就是CurrentMemory，也就是`Memory Balloon`。
+刚才说到guest OS RAM的地址空间映射到qemu-kvm进程的内存地址空间，这样进程就可以很容易的对于guest OS的RAM进行控制，当guest需要使用RAM时，qemu-kvm就在自己的进程内存空间中划分一段给guest用。对于guest OS设置了MaxMemory和CurrentMemory之后，guest OS的RAM上限也就有了，就是MaxMemory，如果当前的guest实际使用不了那么多RAM，就可以将CurrentMemory调小，将多余的内存还给host，guest中看到的内存大小就是CurrentMemory，这就是`Memory Balloon`特性。
 
 ## QEMU
 
@@ -49,11 +49,7 @@ KVM支持用户态(Userspace)进程通过KVM内核(Kernel)模块利用CPU的虚�
 stack@devstack:~$  [master]$ dpkg -l | grep qemu
 ii  kvm                              1:84+dfsg-0ubuntu16+1.0+noroms+0ubuntu14.13 dummy transitional package from kvm to qemu-kvm
 ii  qemu                             1.0+noroms-0ubuntu14.13                     dummy transitional package from qemu to qemu-kvm
-ii  qemu-common                      1.0+noroms-0ubuntu14.13                     qemu common functionality (bios, documentation, etc)
 ii  qemu-kvm                         1.0+noroms-0ubuntu14.13                     Full virtualization on i386 and amd64 hardware
-ii  qemu-launcher                    1.7.4-1ubuntu2                              GTK+ front-end to QEMU computer emulator
-ii  qemu-utils                       1.0+noroms-0ubuntu14.13                     qemu utilities
-ii  qemuctl                          0.2-2                                       controlling GUI for qemu
 
 {% endhighlight %}
 
