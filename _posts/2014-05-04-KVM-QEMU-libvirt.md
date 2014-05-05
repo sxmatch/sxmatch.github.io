@@ -22,7 +22,7 @@ tags : [OpenStack, KVM, QEMU, libvirt]
 
 ## KVM
 
-KVM是`Kernel-based Virtual Machine`的缩写。从Linux kernel 2.6.20开始就包含在Linux内核代码之中，使用这个或者更高版本内核的Linux发行版，就直接可以使用KVM。KVM依赖于host CPU的虚拟化功能的支持(Inter-VT & AMD-V)，类似于Xen的HVM，对于guest OS的内核没有任何的要求，可以直接支持创建Linux和Windows的虚拟机。
+KVM是`Kernel-based Virtual Machine`的缩写。从Linux kernel 2.6.20开始就包含在Linux内核代码之中，使用这个或者更高版本内核的Linux发行版，就直接可以使用KVM。KVM依赖于host CPU的虚拟化功能的支持(Intel-VT & AMD-V)，类似于Xen的HVM，对于guest OS的内核没有任何的要求，可以直接支持创建Linux和Windows的虚拟机。
 
 这里有个图详细的解释了KVM的运行原理：
 
@@ -53,6 +53,7 @@ ii  qemu-kvm                         1.0+noroms-0ubuntu14.13                    
 
 {% endhighlight %}
 
+在Nova的配置文件中有一个`libvirt_type`配置项，可以配置成kvm也可以是qemu，这里的kvm其实指的也是qemu-kvm。如果要配置成kvm，需要host的CPU支持Intel-VT和AMD-V技术，并且要载入kvm内核模块，由于有硬件加速，创建的guest OS的性能要优于qemu；qemu配置项指的就是完全的QEMU虚拟化，没有硬件加速，主要用于比较老式的CPU和操作系统环境，或者是在虚拟机中创建虚拟机的情况，当然完全的QEMU虚拟化性能要比qemu-kvm差一些。
 
 *QEMU的功能大致分为两类：*
 
