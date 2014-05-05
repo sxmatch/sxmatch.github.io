@@ -53,7 +53,7 @@ ii  qemu-kvm                         1.0+noroms-0ubuntu14.13                    
 
 {% endhighlight %}
 
-在Nova的配置文件中有一个`libvirt_type`配置项，可以配置成kvm也可以是qemu，这里的kvm其实指的也是qemu-kvm。如果要配置成kvm，需要host的CPU支持Intel-VT和AMD-V技术，并且要载入kvm内核模块，由于有硬件加速，创建的guest OS的性能要优于qemu；qemu配置项指的就是完全的QEMU虚拟化，没有硬件加速，主要用于比较老式的CPU和操作系统环境，或者是在虚拟机中创建虚拟机的情况，当然完全的QEMU虚拟化性能要比qemu-kvm差一些。
+在Nova的配置文件中有一个`virt_type`配置项，可以配置成kvm也可以是qemu，这里的kvm其实指的也是qemu-kvm。如果要配置成kvm，需要host的CPU支持Intel-VT和AMD-V技术，并且要载入kvm内核模块，由于有硬件加速，创建的guest OS的性能要优于qemu；qemu配置项指的就是完全的QEMU虚拟化，没有硬件加速，主要用于比较老式的CPU和操作系统环境，或者是在虚拟机中创建虚拟机的情况，当然完全的QEMU虚拟化性能要比qemu-kvm差一些。
 
 *QEMU的功能大致分为两类：*
 
