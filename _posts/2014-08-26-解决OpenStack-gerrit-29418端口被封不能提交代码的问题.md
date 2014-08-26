@@ -10,7 +10,7 @@ tags : [git, review, gerrit, ssh, http, vpn, socks]
 
 *陈锐 ruichen @kiwik*
 
-*2014/8/26 20:54:28  *
+*2014/8/26 21:05:44*
 
 ----------
 
@@ -69,7 +69,7 @@ Connection to review.openstack.org closed.
 是牛人就不折腾，也不靠人民币，挥挥手问题解决。git review默认通过ssh的方式，http和https的方式是不是也支持能？答案是肯定的，为了就是避免你在Firewall之后不能通过29418端口提交代码，但是需要一点小技巧。
 
 - 首先，需要登录review.openstack.org，然后在Settings -> HTTP Password里，生成一个HTTP密码，应该是一个大小写加数字的随机字符串。
-- 然后通过`git remote set-url gerrit https://username:http-password@review.openstack.org/openstack/nova.git`命令把ssh修改成https方式，当然也可以用http，经过我的实验都是可以的。别忘了把上面字符串中的用户名/密码改成你的gerrit用户名和上一步生成的http密码。
+- 然后通过`git remote set-url gerrit https://username:http-password@review.openstack.org/openstack/nova.git`命令把ssh修改成https方式，当然也可以用http，经过我的实验都是可以的。别忘了把上面字符串中的用户名/密码改成你的gerrit用户名和上一步生成的HTTP密码。
 
 修改前：
 
