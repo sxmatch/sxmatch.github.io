@@ -15,11 +15,10 @@ tagline: regexisart
 
 ## Doing list
 
-- Keystone
-- Heat
-- cfn-tools
+- Nova
+- NFV
+- QEMU/KVM
 - git
-- HA deployment
 
 ## Tips
 
