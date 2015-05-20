@@ -178,6 +178,39 @@ BlueBox的升级顺序：
 
 有人问到类似Racespace的OpenStack公有云部署场景下，有很多的nova-compute节点的情况又应该怎么升级？Jesse的回答和我心里的考虑是一致的，首先，升级nova中除了compute的所有服务，其实主要是需要升级nova db schema和nova-conductor，然后，nova-compute再一个一个升级，在我看来其实应该将nova-api分离出来，等所有nova-compute升级完成，再升级nova-api，避免新接口走入老代码。当然最好配合update_level配置。详见我的blog [“Nova如何支持live Upgrade”](http://kiwik.github.io/openstack/2015/04/04/Nova%E5%A6%82%E4%BD%95%E6%94%AF%E6%8C%81live-upgrade/ "http://kiwik.github.io/openstack/2015/04/04/Nova%E5%A6%82%E4%BD%95%E6%94%AF%E6%8C%81live-upgrade/")
 
+
+----------
+
+以下议题强烈感谢huangtianhua(Heat core)提供：
+
+### The Good and the Bad of OpenStack REST APIs ###
+
+首先给出REST的定义：REST是一种基于Http协议实现资源操作的一种软件风格。然后分析了OpenStack REST APIs目前的优缺点。
+
+优点：
+
+1. 模块化：服务类型分类
+2. 服务目录：每种服务有对应的endpoints的定义
+3. 认证流程：携带用户名，密码，租户到keystone认证获取token和对应的服务目录， 然后携带token访问对应服务的endpoints
+
+缺点：
+
+1. 版本混乱：用户不知道该用哪个版本，v1?v2?v2.1?v3? 提出API的设计应该具备高度可扩展性，仅应在api有重大变化时引入新的版本号。
+2. 绕过服务目录：不在服务目录里面的服务不应该使用，很多模块，比如heat，会绕过服务目录通过配置文件或者其他方式构建该服务的endpoint。
+3. 客户端-服务端耦合：
+    - 某些特性客户端和服务端相互依赖
+    - API大多是通过客户端间接测试
+4. 客户端和服务端缺乏中间件，客户端直接对服务端URL硬编码
+5. 包含RPC的风格：滥用‘action’的概念，很多模块在url里面直接携带actions，比如/v2/image/{image_id}/actions/deactive，各个模块可以大排查，将action从url去除，因为REST是基于资源操作的，actions可以通过body携带。
+6. 模块间不一致：
+    - 分页查询的接口：
+        - nova，glance，cinder等使用‘limit’和‘marker’， 而另外一些模块根本就没有分页查询或者使用其他比如‘page’和‘end_marker’
+        - 有的模块会有count的统计，大部分模块没有这个功能
+        - 在过滤时有全匹配和通配的不同支持
+    - http响应的返回码
+
+目前API Working Group正在分析，后续会交付OpenStack REST APIs的guideline，希望有兴趣的同学可以参加讨论。
+
 ## See you later ##
 
 今天blog完成的晚了，已经凌晨2点。呵呵，关键是晚上的活动太给力 `HP & Scality’s Supernatural Evening`, 一个在旧火车站举行的OpenStack的大party，BBQ，啤酒，特色小吃，魔术表演，让我现在都没有困意。说实话比会场提供的午餐好吃太多。
