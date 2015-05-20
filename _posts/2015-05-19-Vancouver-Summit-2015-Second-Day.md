@@ -181,7 +181,7 @@ BlueBox的升级顺序：
 
 ----------
 
-以下议题强烈感谢huangtianhua(Heat core)提供：
+以下议题强烈感谢 huangtianhua (Heat core)提供：
 
 ### The Good and the Bad of OpenStack REST APIs ###
 
