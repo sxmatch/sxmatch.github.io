@@ -18,7 +18,7 @@ tags : [Vancouver, summit, nova]
 
 *今天开始写一个系列，记录我在OpenStack Vancouver Summit上的所见所闻所感，以下为个人立场，不代表官方观点。个人能力有限，如有不正确之处，请随时指出，谢谢*
 
-### Topics ###
+## Topics ##
 
 ### Taking Risks: How Experimentation Leads to Breakthroughs ###
 
