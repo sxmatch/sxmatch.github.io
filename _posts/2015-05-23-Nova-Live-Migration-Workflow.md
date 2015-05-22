@@ -18,4 +18,4 @@ tags : [nova, live, migration]
 
 ![][1]
 
-[1]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2014-05-23/Live-migration-kilo-RuiChen.bmp
+[1]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2015-05-23/Live-migration-kilo-RuiChen.bmp
