@@ -16,6 +16,8 @@ tags : [nova, live, migration]
 
 啥废话都不说了，直接看图。
 
+图片较大，请耐心等待，做个眼保健操。
+
 ![][1]
 
 [1]: https://raw.github.com/kiwik/kiwik.github.io/master/_posts_images/2015-05-23/Live-migration-kilo-RuiChen.bmp
