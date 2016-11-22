@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Hello World OpenStack!
-tagline: regexisart
+title: OpenStack I'm here!
+tagline: keep simple
 ---
 {% include JB/setup %}
 
@@ -15,9 +15,9 @@ tagline: regexisart
 
 ## Doing list
 
-- Nova
-- NFV
-- QEMU/KVM
+- Cinder
+- Zaqar
+- Ceph
 - git
 
 ## Tips
@@ -31,4 +31,4 @@ if __name__ == '__main__':
 
 ----------
 
-陈锐 Rui Chen @kiwik at sina chenrui.momo@gmail.com
+sxmatch Wang Hao @sxmatch at sina sxmatch1986@gmail.com
