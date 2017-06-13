@@ -40,4 +40,4 @@ Cinder在使用LVM（逻辑卷管理）作为driver时，在suse环境和不安�
 7. 扩展逻辑卷(可以扩展逻辑卷的大小，根据参数不同有两种方式): lvextend -L [大小][逻辑卷路径] 例如：扩展到12G `lvextend -L 12G /dev/cinder-volumes/volume1` ; 增加12G `lvextend -L +12G /dev/cinder-volumes/volume1`
 
 
-8. 减少逻辑卷(和扩展一样，根据参数不同有两种方式): lvreduce -L [大小][逻辑卷路径] 例如: 减少到4G `lvreduce -L 4G /dev/cinder-volumes/volume1`; 减少4G `lvreduce -L -4G /dev/cinder-volumes/volume1`
+1. 减少逻辑卷(和扩展一样，根据参数不同有两种方式): lvreduce -L [大小][逻辑卷路径] 例如: 1.减少到4G `lvreduce -L 4G /dev/cinder-volumes/volume1`; 2.减少4G `lvreduce -L -4G /dev/cinder-volumes/volume1`
