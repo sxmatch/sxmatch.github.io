@@ -20,10 +20,10 @@ tags : [OpenStack, cinder]
 
 Cinder在使用LVM（逻辑卷管理）作为driver时，在suse环境和不安装lvm的ubuntu环境上需要先执行一系列的命令才能正常使用cinder:
 
-1. 创建物理卷(一般选择服务器没有使用的另一块或多块硬盘作为供cinder使用的物理卷): pvcreate [磁盘设备路径] 例如：`pvcreate /dev/sdb` 创建完成后可以使用 `pvdisplay` 命令查看物理卷详情
-2. 创建卷组（cinder默认使用的卷组名称为cinder-volumes): vgcreate [卷组名称][要添加到卷组的分区或者磁盘] 例如: `vgcreate cinder-volumes /dev/sdb` 创建完成后可以使用 `vgdisplay` 命令查看
 
-​       卷组详情
+1. 创建物理卷(一般选择服务器没有使用的另一块或多块硬盘作为供cinder使用的物理卷): pvcreate [磁盘设备路径] 例如：`pvcreate /dev/sdb` 创建完成后可以使用 `pvdisplay` 命令查看物理卷详情
+2. 创建卷组（cinder默认使用的卷组名称为cinder-volumes): vgcreate [卷组名称][要添加到卷组的分区或者磁盘] 例如: `vgcreate cinder-volumes /dev/sdb` 创建完成后可以使用 `vgdisplay` 命令查看卷组详情
+
 
 3. 激活卷组(这步完成后，cinder就可以正常使用lvm了): vgchange -ay [卷组名称] 例如 `vgchange -ay cinder-volumes`
 
