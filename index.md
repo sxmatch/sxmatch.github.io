@@ -1,7 +1,7 @@
 ---
 layout: page
-title: OpenStack I'm here!
-tagline: keep simple
+title: Sxmatch's Tech Life
+tagline: Keep Yourself Up!
 ---
 {% include JB/setup %}
 
@@ -25,7 +25,7 @@ tagline: keep simple
 {% highlight python linenos %}
 
 if __name__ == '__main__':
-    print 'Hello World OpenStack!'
+    print 'Hello World!'
 
 {% endhighlight %}
 
