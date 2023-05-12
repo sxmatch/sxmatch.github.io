@@ -15,10 +15,10 @@ tagline: Keep Yourself Up!
 
 ## Doing list
 
-- Cinder
-- Zaqar
+- OpenStack
+- Kubernetes
 - Ceph
-- git
+- AI
 
 ## Tips
 
