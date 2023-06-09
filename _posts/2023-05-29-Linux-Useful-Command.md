@@ -1,3 +1,20 @@
+---
+layout: post
+category : Linux
+tagline: "keep simple"
+tags : [Linux, Command]
+---
+{% include JB/setup %}
+
+**If need to reprint, please indicate the source**
+
+**Copyright: 王昊 Hao Wang @sxmatch**
+
+*2023/5/29*
+
+-------
+---
+
 # Linux Useful Commands
 
 1. Download directory & subdirectories by Wget

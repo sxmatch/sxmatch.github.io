@@ -1,3 +1,20 @@
+---
+layout: post
+category : OpenStack
+tagline: "keep simple"
+tags : [OpenStack, Glance]
+---
+{% include JB/setup %}
+
+**If need to reprint, please indicate the source**
+
+**Copyright: 王昊 Hao Wang @sxmatch**
+
+*2023/5/22*
+
+-------
+---
+
 ## Glance Per-Tenant Quotas For Image
 
 - Background Introduction

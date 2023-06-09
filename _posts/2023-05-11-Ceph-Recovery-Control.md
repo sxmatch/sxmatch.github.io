@@ -1,3 +1,20 @@
+---
+layout: post
+category : Ceph
+tagline: "keep simple"
+tags : [Ceph, Recovery]
+---
+{% include JB/setup %}
+
+**If need to reprint, please indicate the source**
+
+**Copyright: 王昊 Hao Wang @sxmatch**
+
+*2023/5/11*
+
+-------
+---
+
 # Instruction of Ceph Recovery Limit
 
 Ceph now use two types of queue & queuing sheduler for prioritizing osd operations, wpg and mclock. The WeightedPriorityQueue (`wpq`) dequeues operations in relation to their priorities to prevent starvation of any queue. WPQ should help in cases where a few OSDs are more overloaded than others. The mClockQueue (`mclock_scheduler`) prioritizes operations based on which class they belong to (recovery, scrub, snaptrim, client op, osd subop). In Ceph Pacific release, the default queue is wpg, and after Pacific, it will be mclock. This instruction will introduce two ways to modify ceph recovery limits based on wpg and mclock for keeping operational performances.

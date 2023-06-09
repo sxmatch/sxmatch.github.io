@@ -9,16 +9,19 @@ tagline: Keep Yourself Up!
 
 <ul class="posts">
   {% for post in site.posts %}
-    <p><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></p>
+    <p><span>{{ post.date | date_to_string }}</span> » <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></p>
   {% endfor %}
 </ul>
 
-## Doing list
+## Focuse list
 
 - OpenStack
 - Kubernetes
 - Ceph
 - AI
+- Linux
+- Python
+- GO
 
 ## Tips
 
@@ -29,6 +32,7 @@ if __name__ == '__main__':
 
 {% endhighlight %}
 
-----------
+-------
+---
 
-sxmatch Wang Hao @sxmatch at sina sxmatch1986@gmail.com
+sxmatch Hao Wang @sxmatch at Twitter sxmatch1986@gmail.com
