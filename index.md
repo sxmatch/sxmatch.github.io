@@ -24,6 +24,9 @@ tagline: Keep Yourself Up!
 - GO
 
 ## Tips
+<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
+
+<div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="dark" data-type="VERTICAL" data-vanity="hao-wang-b7340120" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://ca.linkedin.com/in/hao-wang-b7340120?trk=profile-badge">Hao Wang</a></div>
 
 {% highlight python linenos %}
 
