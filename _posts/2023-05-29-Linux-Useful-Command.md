@@ -57,3 +57,11 @@ tags : [Linux, Command]
    Ceph df detail
    Ceph osd df tree
    ```
+
+8. systemctl reset-failed tftp@tftp.service  to clean the not-found failed services.
+
+9. To clear the alert of ceph "xxx daemons have recently crashed",  use ```ceph crash ls & ceph crash archive-all```
+
+10. git fetch origin --prune
+
+11. rabbitmqctl cluster_status rabbitmqctl list_queues type

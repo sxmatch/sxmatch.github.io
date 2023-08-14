@@ -23,12 +23,12 @@ tags : [OpenStack, Rabbitmq]
   
   2. Exclusive queues are tied to the lifecycle of their declaring connection.Quorum queues by design are replicated and durable, therefore quorum queues cannot be exclusive.
   
-  3. Certain failure scenarios can result in mirrored queues confirming messages too early, potentially resulting in a data loss.Quorum queues designed to be safer and provide simpler, well defined failure handling semantics.
+  3. Certain failure scenarios can result in mirrored queues confirming messages too early, potentially resulting in data loss. Quorum queues are designed to be safer and provide simpler, well-defined failure handling semantics.
 
-- Use Cases of Quorum queues:
+- Use Cases of Quorum Queues:
   
   1. Their intended use is for topologies where queues exist for a long time and are critical to certain aspects of system operation, 
-     therefore fault tolerance and data safety is more important than lowest possible latency and advanced queue features.
+     therefore fault tolerance and data safety are more important than the lowest possible latency and advanced queue features.
   
   2. Publishers should use publisher confirms as this is how clients can interact with the quorum queue consensus system.
      Publisher confirms will only be issued once a published message has been successfully replicated to a quorum of nodes and is considered "safe" within the context of the system.
@@ -58,8 +58,4 @@ tags : [OpenStack, Rabbitmq]
   
   3. rabbit_quroum_max_memory_length=0, limit the number of messages in the quorum queue to reduce the memory pressure.
   
-  4. rabbit_quroum_max_memory_length=0, limit the number of memory bytes  in the quorum queue to reduce the memory pressure.
-
-
-
-
+  4. rabbit_quroum_max_memory_length=0, limit the number of memory bytes in the quorum queue to reduce the memory pressure.
