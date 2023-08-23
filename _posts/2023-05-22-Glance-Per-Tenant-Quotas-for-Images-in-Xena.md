@@ -39,27 +39,33 @@ tags : [OpenStack, Glance]
 - Steps To Configure Glance for Per-Tenant Quotas For Image
   
   1. Prepare a system-scoped token
-     ```# source /etc/kolla/admin-openrc.sh```
-     ```# unset OS_TENANT_NAME OS_PROJECT_NAME OS_PROJECT_DOMAIN_NAME OS_USER_DOMAIN_NAME```
+     
+     ```shell
+     source /etc/kolla/admin-openrc.sh
+     unset OS_TENANT_NAME OS_PROJECT_NAME OS_PROJECT_DOMAIN_NAME OS_USER_DOMAIN_NAME
+     ```
   
   2. Register the quota limits in Keystone:
-     ```# openstack --os-system-scope all registered limit create --service glance --default-limit <limit number> --region RegionOne image_size_total```
-     ```# openstack --os-system-scope all registered limit create --service glance --default-limit <limit number> --region RegionOne image_stage_total```
-     ```# openstack --os-system-scope all registered limit create --service glance --default-limit <limit number> --region RegionOne image_count_total```
-     ```# openstack --os-system-scope all registered limit create --service glance --default-limit <limit number> --region RegionOne image_count_uploading```
+     
+     ```shell
+     openstack --os-system-scope all registered limit create --service glance --default-limit <limit number> --region RegionOne image_size_total
+     openstack --os-system-scope all registered limit create --service glance --default-limit <limit number> --region RegionOne image_stage_total
+     openstack --os-system-scope all registered limit create --service glance --default-limit <limit number> --region RegionOne image_count_total
+     openstack --os-system-scope all registered limit create --service glance --default-limit <limit number> --region RegionOne image_count_uploading
+     ```
   
   3. Change Glance's glance-api.conf configuration file to use Keystone quotas
      
      - In [DEFAULT] section, enable per-tenant quotas in/etc/kolla/glance-api/glance-api.conf:
        
-       ```
+       ```shell
        [DEFAULT]
        use_keystone_limits = True
        ```
      
-     - In the [oslo_limit] section, configure access to keystone:
+     - In the [oslo_limit] section, configure access to keystone
        
-       ```
+       ```shell
        [oslo_limit]
        auth_url = <keystone_public_endpoint>:5000
        auth_type = password
@@ -76,14 +82,17 @@ tags : [OpenStack, Glance]
      
      - Make Sure that glance account has reader access to system-scope resource
        
-       ```
+       ```shell
        openstack role add --user glance --user-domain Default --system all reader
        ```
      
      - Restart the Glance service.
   
   4. Delete the registered limit
-     ```openstack --os-system-scop all registered limit delete <registered limit id>```
+     
+     ```shell
+     openstack --os-system-scop all registered limit delete <registered limit id>
+     ```
   
   5. Change the registered limit
      If user wants to change the registered limit for some resource, this limit should be deleted first, and then create a new one.
@@ -92,14 +101,23 @@ tags : [OpenStack, Glance]
   Glance also support to set image quota limit for specific project after setting the per-tenant quota limit, 
   
   1. Prepare a system scoped token
-     ```# source /etc/kolla/admin-openrc.sh```
-     ```# unset OS_TENANT_NAME OS_PROJECT_NAME OS_PROJECT_DOMAIN_NAME OS_USER_DOMAIN_NAME```
+     
+     ```shell
+     source /etc/kolla/admin-openrc.sh
+     unset OS_TENANT_NAME OS_PROJECT_NAME OS_PROJECT_DOMAIN_NAME OS_USER_DOMAIN_NAME
+     ```
   
   2. Create project limit for image quota resource
-     ```# openstack --os-system-scope all limit create --project <project name> --service glance --resource-limit <limit number> --region RegionOne image_size_total```
-     ```# openstack --os-system-scope all limit create --project <project name> --service glance --resource-limit <limit number> --region RegionOne image_stage_total```
-     ```# openstack --os-system-scope all limit create --project <project name> --service glance --resource-limit <limit number> --region RegionOne image_count_total```
-     ```# openstack --os-system-scope all limit create --project <project name> --service glance --resource-limit <limit number> --region RegionOne image_count_uploading```
+     
+     ```shell
+     openstack --os-system-scope all limit create --project <project name> --service glance --resource-limit <limit number> --region RegionOne image_size_total
+     openstack --os-system-scope all limit create --project <project name> --service glance --resource-limit <limit number> --region RegionOne image_stage_total
+     openstack --os-system-scope all limit create --project <project name> --service glance --resource-limit <limit number> --region RegionOne image_count_total
+     openstack --os-system-scope all limit create --project <project name> --service glance --resource-limit <limit number> --region RegionOne image_count_uploading
+     ```
   
   3. Update project limit for image quota resource
-     ```openstack --os-system-scope all limit set --resource-limit <limit number> <limit-id>```
+     
+     ```shell
+     openstack --os-system-scope all limit set --resource-limit <limit number> <limit-id>
+     ```
