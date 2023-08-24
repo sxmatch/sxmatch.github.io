@@ -42,7 +42,7 @@ tags : [OpenStack, Glance]
      
      ```shell
      source /etc/kolla/admin-openrc.sh
-     unset OS_TENANT_NAME OS_PROJECT_NAME OS_PROJECT_DOMAIN_NAME OS_USER_DOMAIN_NAME
+     unset OS_TENANT_NAME OS_PROJECT_NAME
      ```
   
   2. Register the quota limits in Keystone:
@@ -104,7 +104,7 @@ tags : [OpenStack, Glance]
      
      ```shell
      source /etc/kolla/admin-openrc.sh
-     unset OS_TENANT_NAME OS_PROJECT_NAME OS_PROJECT_DOMAIN_NAME OS_USER_DOMAIN_NAME
+     unset OS_TENANT_NAME OS_PROJECT_NAME
      ```
   
   2. Create project limit for image quota resource
@@ -119,5 +119,5 @@ tags : [OpenStack, Glance]
   3. Update project limit for image quota resource
      
      ```shell
-     openstack --os-system-scope all limit set --resource-limit <limit number> <limit-id>
+     openstack --os-system-scope all limit set --default-limit <limit number> <limit-id>
      ```
