@@ -65,3 +65,21 @@ tags : [Linux, Command]
 10. git fetch origin --prune
 
 11. rabbitmqctl cluster_status rabbitmqctl list_queues type
+
+12. Get all children of rbd image snapshot(include the trash): rbd children -a image/865e26cc-c520-4588-9bbe-5d0c342951d8@snap
+
+13. Remove the image from the trash: rbd --pool volume-ssd trash remove 5a98c5f62bc3d8
+
+14. Restore the image from the trash: rbd trash restore 62c12d9c849566 --pool volume-ssd
+
+15. Unprotect the snapshot: rbd snap unprotect --pool volume-ssd volume-a9f01c5f-6df7-4363-89d3-c9e0b4f28601@__snap_for_clone
+
+16. Remove the snapshot: rbd snap remove --pool volume-ssd volume-a9f01c5f-6df7-4363-89d3-c9e0b4f28601@__snap_for_clone
+
+17. Remove the volume: rbd remove --pool volume-ssd volume-a9f01c5f-6df7-4363-89d3-c9e0b4f28601
+
+
+
+```shell
+curl -g -i -X POST http://172.19.25.18/volume/v3/f44b903587ac4310af9ae37feaff73d0/volumes/fbf408de-5773-48cd-84d8-446faf223d71/action -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Auth-Token: gAAAAABk97Yby6yjZIox9TVAIxsoBIrpH_-oTA65_SwDiQS8qmQOPX1HEggNtKCvLWsuT3IXO7HdAOg__oC0atjZ4VAKzT0hDjeer7XE40sZvgdwZ9L4gEl3KatceOEUd4bDIm8CuKGgKpjGPkPmmTg2Reg-D5bawReNuYDl5EkWGdXZCttZRNE" -H "X-Service-Token: gAAAAABk97Yby6yjZIox9TVAIxsoBIrpH_-oTA65_SwDiQS8qmQOPX1HEggNtKCvLWsuT3IXO7HdAOg__oC0atjZ4VAKzT0hDjeer7XE40sZvgdwZ9L4gEl3KatceOEUd4bDIm8CuKGgKpjGPkPmmTg2Reg-D5bawReNuYDl5EkWGdXZCttZRNE" -H "OpenStack-API-Version: volume 3.66" -d '{"os-detach": {"attachment_id": "49930aa2-6564-461f-9af8-564cfecd56cb"}}'
+```

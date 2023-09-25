@@ -21,7 +21,7 @@ tags : [OpenStack, Rabbitmq]
   
   1. Regular queues can be non-durable. Quorum queues are always durable.
   
-  2. Exclusive queues are tied to the lifecycle of their declaring connection.Quorum queues by design are replicated and durable, therefore quorum queues cannot be exclusive.
+  2. Exclusive queues are tied to the lifecycle of their declaring connection. Quorum queues by design are replicated and durable, therefore quorum queues cannot be exclusive.
   
   3. Certain failure scenarios can result in mirrored queues confirming messages too early, potentially resulting in data loss. Quorum queues are designed to be safer and provide simpler, well-defined failure handling semantics.
 
