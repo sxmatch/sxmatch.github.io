@@ -18,7 +18,7 @@ tags : [OpenStack, Glance]
 ## Glance Per-Tenant Quotas For Image
 
 - Background Introduction
-  Glance has supported resource consumption quotas on tenants using Keyston's unified functionality. Resource limits are registered in Keystone with suitable default values, and the default values could be overridden on a per-tenant basis.
+  Glance has supported resource consumption quotas on tenants using Keystone's unified functionality. Resource limits are registered in Keystone with suitable default values, and the default values could be overridden on a per-tenant basis.
   When a resource consumption attempt is made in Glance, the current consumption is computed and compared against the limit set in Keystone; If the specified limit is been overdone, the request will be denied.
 
 - Resource Types of Quota
@@ -80,7 +80,7 @@ tags : [OpenStack, Glance]
        
         *NOTE: Glance_PASSWORD need to replace by the password for the **glance** user in the Keystone*.
      
-     - Make Sure that glance account has reader access to system-scope resource
+     - Make sure that glance account has reader access to the system-scope resource
        
        ```shell
        openstack role add --user glance --user-domain Default --system all reader
@@ -97,10 +97,10 @@ tags : [OpenStack, Glance]
   5. Change the registered limit
      If user wants to change the registered limit for some resource, this limit should be deleted first, and then create a new one.
 
-- Steps To Configure Image Quota limit for Specific Project
-  Glance also support to set image quota limit for specific project after setting the per-tenant quota limit, 
+- Steps To Configure Image Quota Limit for Specific Project
+  Glance also support setting image quota limit for the specific project after setting the per-tenant quota limit, 
   
-  1. Prepare a system scoped token
+  1. Prepare a system-scoped token
      
      ```shell
      source /etc/kolla/admin-openrc.sh

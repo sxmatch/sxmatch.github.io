@@ -123,3 +123,15 @@ tags : [OpenStack, Zabbix， Mariadb]
 11. Enable the check-alive script for keepalived: chcon -t keepalived_unconfined_script_exec_t /etc/keepalived/check-alive
 
 12. Config the Zabbix HA: config HAnodename=<hostname>
+
+13. Reset the mariadb password if forgot:
+    
+    ```shell
+    add skip-grant-tables under /etc/my.cnf
+    login mariadb without password
+    mysql -u root
+    FLUSH PRIVILEGES;
+    SET PASSWORD FOR 'root'=PASSWORD('XRtmkhdMXriIu2VvZ8T');
+    ```
+    
+    
