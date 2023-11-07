@@ -87,3 +87,20 @@ tags : [Linux, Command]
     ```shell
     docker run -d --name monitor --net host -v /etc/localtime:/etc/localtime:ro -v /etc/cms:/etc/cms:ro -v /var/log/cms:/var/log/cms:z -v /usr/local/cms:/usr/local/cms:z -v /etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro -v /root/.ssh:/root/.ssh:ro -e PYTHONPATH=/usr/local/cms -w /usr/local/cms/monitor registry.image.com/cms:1.0 /usr/bin/bash -c "update-ca-trust && python3 /usr/local/cms/monitor/server.py"
     ```
+
+19. Resize and extend Linux filesystem
+    
+    ```shell
+    growpart /dev/vda 1
+    xfs_growfs /dev/vda1
+    ```
+
+20. Cloud-Init for user password
+    
+    ```shell
+    #cloud-config
+    users:
+    - name: root
+      lock_passwd: false
+      hashed_passwd: '$1$SaltSalt$7djuPQtXUUgTpJFkzZrCk0'
+    ```
