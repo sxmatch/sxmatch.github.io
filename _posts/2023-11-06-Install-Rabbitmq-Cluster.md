@@ -174,17 +174,14 @@ For production, 3 nodes are required at least.
    
    ```shell
    systemctl enable rabbitmq-server
+   systemctl start rabbitmq-server
    ```
 
-6. Start independent nodes
+6. Copy Erlang cookies from node1 to other nodes.
    
    ```shell
-   # on rabbit1
-   rabbitmq-server -detached
-   # on rabbit2
-   rabbitmq-server -detached
-   # on rabbit3
-   rabbitmq-server -detached
+   scp .erlang.cookie rabbit-mq-cluster-2:/var/lib/rabbitmq/
+   scp .erlang.cookie rabbit-mq-cluster-3:/var/lib/rabbitmq/
    ```
 
 7. Create the cluster, join rabbit node 2 and rabbit node 3 to cluster.
@@ -197,7 +194,7 @@ For production, 3 nodes are required at least.
    rabbitmqctl reset
    # => Resetting node rabbit@rabbit2 ...
    
-   rabbitmqctl join_cluster rabbit@rabbit1
+   rabbitmqctl join_cluster rabbit@rabbit-mq-cluster-1
    # => Clustering node rabbit@rabbit2 with [rabbit@rabbit1] ...done.
    
    rabbitmqctl start_app
