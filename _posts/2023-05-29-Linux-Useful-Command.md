@@ -103,4 +103,39 @@ tags : [Linux, Command]
     - name: root
       lock_passwd: false
       hashed_passwd: '$1$SaltSalt$7djuPQtXUUgTpJFkzZrCk0'
+    
+    #cloud-config
+    users:
+    - name: root
+      lock_passwd: false
+      hashed_passwd: '$1$SaltSalt$toXqleTqTdz/t/WB5JNTz.'
+    disable_root: false
+    ssh_pwauth: true
+    
+    runcmd:
+    - sed -i -e 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+    - systemctl restart sshd
+    ```
+
+21. Sync the repo
+    
+    ```shell
+    dnf reposync --repo zabbix --download-metadata --newest-only
+    dnf install createrepo
+    createrepo /opt/depot/grafana.20231116/CentOS-Stream-9/
+    dnf config-manager --add-repo /opt/depot/grafana.20231116/CentOS-Stream-9
+    ```
+
+22. Improve Ceph recovery speed
+    
+    ```shell
+    1.set “osd_mclock_cost_per_byte_usec_hdd” to 0.1
+    2.set "osd_mclock_max_capacity_iops_hdd" to 10000
+    3.finally soluation: upgrade to 17.2.7
+    ```
+
+23. Select all in VI
+    
+    ```shell
+    gg"+yG
     ```

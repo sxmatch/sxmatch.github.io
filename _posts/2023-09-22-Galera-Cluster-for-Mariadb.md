@@ -86,6 +86,7 @@ tags : [OpenStack, Zabbix， Mariadb]
    mysql> quit;
    
    mysql -u root -p zabbix < /var/lib/mysql/zabbix.sql
+   mysql -u root -p<your_password> --exec="SHOW STATUS LIKE 'wsrep%';"
    SHOW GLOBAL STATUS LIKE 'wsrep_%';
    ```
 
@@ -133,5 +134,3 @@ tags : [OpenStack, Zabbix， Mariadb]
     FLUSH PRIVILEGES;
     SET PASSWORD FOR 'root'=PASSWORD('XRtmkhdMXriIu2VvZ8T');
     ```
-    
-    
