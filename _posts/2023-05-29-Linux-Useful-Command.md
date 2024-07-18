@@ -91,6 +91,35 @@ tags : [Linux, Command]
 19. Resize and extend Linux filesystem
     
     ```shell
+    # convert MBR to GPT
+    lsblk
+    gdisk /dev/vda
+    W
+    Y
+    sudo gdisk /dev/vda
+    N
+    34
+    \n
+    ef02
+    W
+    Y
+    Y
+    sudo partprobe
+    grub2-install /dev/vda
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+    sudo parted /dev/vda print
+    
+    #extend the partitions in linux
+    gdisk /dev/vda
+    p
+    d
+    n
+    \n
+    \n
+    w
+    y
+    sudo partprobe
+    
     growpart /dev/vda 1
     xfs_growfs /dev/vda1
     ```
@@ -138,4 +167,177 @@ tags : [Linux, Command]
     
     ```shell
     gg"+yG
+    ```
+
+24. Check the state of replication in PGSQL
+    
+    ```shell
+    select usename, application_name, client_addr, state, sync_priority, sync_state from pg_stat_replication;
+    systemctl stop postgresql
+    rm -rf /var/lib/pgsql/data/*
+    su - postgres
+    pg_basebackup -h 192.168.20.21 -D /var/lib/pgsql/data -p 5432 -X stream -U replica -w
+    su - postgres
+    touch /var/lib/pgsql/data/standby.signal
+    chmod 600 /var/lib/pgsql/data/standby.signal
+    systemctl start postgresql
+    ```
+
+25. Deployment for rsyslogd
+    
+    ```shell
+    dnf install -y rsyslog-elasticsearch
+    mkdir /var/log/rsyslog
+    vi /etc/rsyslog.d/postgresql.conf
+    setsebool -P logging_syslogd_list_non_security_dirs 1
+    systemctl restart rsyslog
+    
+    sudo semanage fcontext -a -t syslogd_var_lib_t "/var/lib/pgsql/data/log/*"
+    sudo restorecon -R -v /var/lib/pgsql/data/log
+    
+    sudo semanage fcontext -d -t syslogd_var_lib_t "/var/lib/pgsql/*"
+    sudo semanage fcontext -a -t postgresql_db_t "/var/lib/pgsql/*"
+    sudo restorecon -R -v /var/lib/pgsql
+    ```
+
+26. Configuration of rsyslogd
+    
+    ```shell
+    module(load="imfile")
+    module(load="omelasticsearch")
+    
+    input(type="imfile"
+      file="/var/lib/pgsql/data/log/postgresql-Mon.log"
+      tag="fio.postgresql.Mon"
+      startmsg.regex="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]+)? (UTC) "
+      reopenOnTruncate="on"
+    )
+    
+    input(type="imfile"
+      file="/var/lib/pgsql/data/log/postgresql-Tue.log"
+      tag="fio.postgresql.Tue"
+      startmsg.regex="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]+)? (UTC) "
+      reopenOnTruncate="on"
+    )
+    
+    input(type="imfile"
+     file="/var/lib/pgsql/data/log/postgresql-Wed.log"
+     tag="fio.postgresql.Wed"
+     startmsg.regex="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]+)? (UTC) "
+     reopenOnTruncate="on"
+    )
+    
+    input(type="imfile"
+     file="/var/lib/pgsql/data/log/postgresql-Thu.log"
+     tag="fio.postgresql.Thu"
+     startmsg.regex="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]+)? (UTC) "
+     reopenOnTruncate="on"
+    )
+    
+    input(type="imfile"
+     file="/var/lib/pgsql/data/log/postgresql-Fri.log"
+     tag="fio.postgresql.Fri"
+     startmsg.regex="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]+)? (UTC) "
+     reopenOnTruncate="on"
+    )
+    
+    input(type="imfile"
+     file="/var/lib/pgsql/data/log/postgresql-Sat.log"
+     tag="fio.postgresql.Sat"
+     startmsg.regex="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]+)? (UTC) "
+     reopenOnTruncate="on"
+    )
+    
+    input(type="imfile"
+     file="/var/lib/pgsql/data/log/postgresql-Sun.log"
+     tag="fio.postgresql.Sun"
+     startmsg.regex="^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]+)? (UTC) "
+     reopenOnTruncate="on"
+    )
+    
+    template (name="rsyslog-node-index" type="list"
+    )
+    {
+     constant(value="postgresql-xfa-qa-pg-cluster-1-3-" )
+     property(dateFormat="year" name="timereported" )
+     constant(value="." )
+     property(dateFormat="month" name="timereported" )
+     constant(value="." )
+     property(dateFormat="week" name="timereported" )
+    }
+    
+    template (name="rsyslog-record" type="list"
+     option.jsonf="on")
+    {
+     property(dateFormat="rfc3339" format="jsonf" name="timereported" outname="@timestamp" )
+     property(format="jsonf" name="hostname" outname="host" )
+     property(format="jsonf" name="syslogseverity" outname="severity" )
+     property(format="jsonf" name="syslogfacility-text" outname="facility" )
+     property(format="jsonf" name="syslogtag" outname="tag" )
+     property(format="jsonf" name="app-name" outname="source" )
+     property(format="jsonf" name="msg" outname="message" )
+     property(format="jsonf" name="$!metadata!filename" outname="file" )
+     constant(format="jsonf" outname="cloud" value="os.vancouver-a.corp.fortinet.com" )
+     constant(format="jsonf" outname="region" value="regionOne" )
+    }
+    
+    #elasticsearch
+    action(type="omelasticsearch"
+    name="elasticsearch"
+    allowunsignedcerts="on"
+    bulkmode="on"
+    dynSearchIndex="on"
+    action.errorfile="/var/log/rsyslog/omelasticsearch.log"
+    action.errorfile.maxsize="1000000000"
+    pwd="sendlog"
+    searchIndex="rsyslog-node-index"
+    server=["192.168.200.172:9200"]
+    skipverifyhost="on"
+    template="rsyslog-record"
+    uid="sender"
+    searchType="_doc"
+    ) 
+    ```
+
+27. TCP Dump Command
+    
+    ```shell
+    tcpdump -ei eth1 port 3128
+    
+    nmcli connection show
+    nmcli connection modify "Wired connection 1" ipv4.gateway ""
+    nmcli connection modify "Wired connection 1" ipv4.never-default true
+    nmcli connection down "Wired connection 1"
+    nmcli connection up "Wired connection 1"
+    
+    echo "1 rt1" | sudo tee -a /etc/iproute2/rt_tables
+    sudo ip route add 192.168.30.0/24 dev eth1 src 192.168.30.2 table rt1
+    sudo ip route add default via 192.168.30.1 dev eth1 table rt1
+    ip rule add from 192.168.30.173/32 table rt1
+    
+    echo "1 rt1" |  tee -a /etc/iproute2/rt_tables
+    echo "192.168.30.0/24 dev eth1 src 192.168.30.10 table rt1" | sudo tee /etc/sysconfig/network-scripts/route-eth1
+    echo "default via 192.168.30.1 dev eth1 table rt1" >> /etc/sysconfig/network-scripts/route-eth1
+    echo "from 192.168.30.10/32 table rt1" | sudo tee /etc/sysconfig/network-scripts/rule-eth1
+    
+    echo "1 rt1" |  tee -a /etc/iproute2/rt_tables
+    nmcli connection show
+    nmcli connection modify "System eth1" +ipv4.route-table 1
+    nmcli connection modify "System eth1" +ipv4.routes "192.168.30.0/24 192.168.30.1 1"
+    ip rule list
+    nmcli connection modify "System eth1" +ipv4.routing-rules "priority 32765 from 192.168.30.173/32 lookup 1"
+    nmcli connection modify "System eth1" ipv4.never-default false
+    nmcli connection down "System eth1"
+    nmcli connection up "System eth1"
+    ```
+
+28. Add firewall rule
+    
+    ```shell
+    sudo firewall-cmd --zone=public --add-port=443/tcp --permanent
+    sudo firewall-cmd --zone=public --add-service=https --permanent
+    sudo firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="0.0.0.0/0" accept' --permanent
+    sudo firewall-cmd --reload
+    sudo nft list ruleset
+    sudo nft flush ruleset
     ```
