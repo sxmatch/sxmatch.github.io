@@ -1,6 +1,6 @@
 ---
 layout: post
-category : Ceph
+category : Zabbix
 tagline: "keep simple"
 tags : [Zabbix]
 ---
