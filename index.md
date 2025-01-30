@@ -13,7 +13,7 @@ tagline: Keep Yourself Up!
   {% endfor %}
 </ul>
 
-## Focuse list
+## Fouse list
 
 - OpenStack
 - Kubernetes
@@ -31,5 +31,3 @@ tagline: Keep Yourself Up!
 ---
 
 sxmatch Hao Wang @sxmatch at Twitter sxmatch1986@gmail.com
-
-
