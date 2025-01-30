@@ -334,10 +334,18 @@ tags : [Linux, Command]
 28. Add firewall rule
     
     ```shell
+    sudo firewall-cmd --zone=public --list-all
     sudo firewall-cmd --zone=public --add-port=443/tcp --permanent
     sudo firewall-cmd --zone=public --add-service=https --permanent
     sudo firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="0.0.0.0/0" accept' --permanent
     sudo firewall-cmd --reload
+    
     sudo nft list ruleset
     sudo nft flush ruleset
+    ```
+
+29. etcd member operation
+    
+    ```shell
+    etcdctl --endpoints=127.0.0.1:2379 --cert=/etc/kubernetes/pki/etcd/server.crt --cacert=/etc/kubernetes/pki/etcd/ca.crt --key=/etc/kubernetes/pki/etcd/server.key  member remove 7a7b9052339d8b5a
     ```
